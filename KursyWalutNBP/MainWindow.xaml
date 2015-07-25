@@ -1,7 +1,7 @@
 ﻿<Window x:Class="KursyWalutNBP.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Kursy walut NBP" Height="378" Width="554" Icon="D:\Programming\C#\KursyWalutNBP\KursyWalutNBP\green_dollar.ico" KeyDown="Window_KeyDown">
+        Title="Kursy walut NBP" Height="378" Width="554" Icon="green_dollar.ico" KeyDown="Window_KeyDown">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="25"/>
