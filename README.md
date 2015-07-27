@@ -4,7 +4,7 @@ Jak sama nazwa wskazuje, program pobiera i wyswietla aktualne kursy walut z ofic
 ## TODO:
 * Zaprojektować nowy interfejs
   * szczególy niedlugo...
-* Dodać możliwosć pobrania archiwalnych kursów walut
+* Dodać możliwosć pobierania archiwalnych kursów walut
 
 ## Autorzy projektu:
 * Dominik Magdaleński
