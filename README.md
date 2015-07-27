@@ -1,5 +1,5 @@
 # KursyWalutNBP
-Jak sama nazwa wskazuje, program pobiera i wyswietla aktualne kursy walut NBP.
+Jak sama nazwa wskazuje, program pobiera i wyswietla aktualne kursy walut z oficjalnej strony NBP.
 
 ## TODO:
 * Zaprojektować nowy interfejs
