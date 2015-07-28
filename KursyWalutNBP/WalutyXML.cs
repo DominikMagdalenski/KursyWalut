@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Xml;
 
 namespace KursyWalutNBP
@@ -30,6 +31,19 @@ namespace KursyWalutNBP
         {
             Nazwa = nazwa;
             KursSredni = kursSredni;
+
+            // Tworzy nowy obiekt klasy CultureInfo o nazwie culture.
+            // Jest on znaczący przy parsowaniu string na double,
+            // ponieważ w Polsce separatorem dziesiętnym
+            // w liczbach zmiennoprzecinkowych jest przecinek
+            // podczas gdy standardowo w językach programowania
+            // takim separatorem jest kropka.
+            // Nowy obiekt klasy CultureInfo zostanie przekazany
+            // metodzie double.Parse i wtedy separatorem dziesiętnym
+            // w tej metodzie będzie, w tym przypadku, przecinek.
+            // Jest to zależne od podanego 'specific culture'
+            // w konstruktorze CultureInfo(String)
+            CultureInfo culture = new CultureInfo("pl-PL");
 
             // tworzenie nowego dokumentu XML
             var doc = new XmlDocument();
@@ -64,18 +78,18 @@ namespace KursyWalutNBP
                     xmlNode = doc.GetElementsByTagName("kurs_sredni").Item(i);
                     if (xmlNode != null)
                         _lista[i].KursSredni =
-                            Convert.ToDouble(xmlNode.InnerText.Replace(',', '.'));
+                            double.Parse(xmlNode.InnerText, culture);
                 }
                 else
                 {
                     xmlNode = doc.GetElementsByTagName("kurs_kupna").Item(i);
                     if (xmlNode != null)
                         _lista[i].KursKupna =
-                            Convert.ToDouble(xmlNode.InnerText.Replace(',', '.'));
+                            double.Parse(xmlNode.InnerText, culture);
                     xmlNode = doc.GetElementsByTagName("kurs_sprzedazy").Item(i);
                     if (xmlNode != null)
                         _lista[i].KursSprzedazy =
-                            Convert.ToDouble(xmlNode.InnerText.Replace(',', '.'));
+                            double.Parse(xmlNode.InnerText, culture);
                 }
             }
         }
