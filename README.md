@@ -3,7 +3,7 @@ Jak sama nazwa wskazuje, program pobiera i wyswietla aktualne kursy walut z ofic
 
 ## TODO:
 * Zaprojektować nowy interfejs
-  * szczególy niedlugo...
+  * szczególy: <a href="http://dominprogs.com/kursywalutnbp/?lang=pl" target="_blank">dominprogs.com</a>
 * Dodać możliwosć pobierania archiwalnych kursów walut
 
 ## Autorzy projektu:
