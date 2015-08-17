@@ -11,31 +11,35 @@
         </Grid.RowDefinitions>
         <Menu IsMainMenu="True" Margin="0" VerticalAlignment="Top" Height="22">
             <MenuItem Header="Tryb">
-                <MenuItem Header="Kursy aktualne"></MenuItem>
-                <MenuItem Header="Archiwum"></MenuItem>
-                <MenuItem Header="Zapisz..."></MenuItem>
+                <MenuItem Header="Kursy aktualne" Click="Aktualne_Click"></MenuItem>
+                <MenuItem Header="Archiwum" Click="Archiwum_Click"></MenuItem>
+                <MenuItem Header="Zapisz..." Click="Zapisz_Click"></MenuItem>
             </MenuItem>
             <MenuItem Header="Edycja">
-                <MenuItem Header="Sortuj listę..."></MenuItem>
+                <MenuItem Header="Sortuj listę..." Click="Sortuj_Click"></MenuItem>
                 <MenuItem Header="Wyświetl tabelę">
-                    <MenuItem Header="Tabela A..."></MenuItem>
-                    <MenuItem Header="Tabela B..."></MenuItem>
-                    <MenuItem Header="Tabela C..."></MenuItem>
+                    <MenuItem Header="Tabela A" Click="WyswietlA_Click"></MenuItem>
+                    <MenuItem Header="Tabela B" Click="WyswietlB_Click"></MenuItem>
+                    <MenuItem Header="Tabela C" Click="WyswietlC_Click"></MenuItem>
                 </MenuItem>
-                <MenuItem Header="Wyczyść listę"></MenuItem>
+                <MenuItem Header="Wyczyść listę" Click="Wyczysc_Click"></MenuItem>
             </MenuItem>
             <MenuItem Header="Wykres">
-                <MenuItem Header="z listy wybranych walut..."></MenuItem>
-                <MenuItem Header="z tabeli..."></MenuItem>
-                <MenuItem Header="zmian kursu waluty..."></MenuItem>
+                <MenuItem Header="z listy wybranych walut..." Click="WykresLista_Click"></MenuItem>
+                <MenuItem Header="z tabeli">
+                    <MenuItem Header="Tabela A" Click="WykresA_Click"></MenuItem>
+                    <MenuItem Header="Tabela B" Click="WykresB_Click"></MenuItem>
+                    <MenuItem Header="Tabela C" Click="WykresC_Click"></MenuItem>
+                </MenuItem>
+                <MenuItem Header="zmian kursu waluty..." Click="WykresZmian_Click"></MenuItem>
             </MenuItem>
             <MenuItem Header="Pomoc">
-                <MenuItem Header="Pomoc"></MenuItem>
+                <MenuItem Header="Pomoc" Click="Pomoc_Click"></MenuItem>
                 <Separator></Separator>
-                <MenuItem Header="O programie"></MenuItem>
-                <MenuItem Header="Strona NBP"></MenuItem>
+                <MenuItem Header="O programie" Click="OProgramie_Click"></MenuItem>
+                <MenuItem Header="Strona NBP" Click="StronaNBP_Click"></MenuItem>
                 <Separator></Separator>
-                <MenuItem Header="Autorzy"></MenuItem>
+                <MenuItem Header="Autorzy" Click="Autorzy_Click"></MenuItem>
             </MenuItem>
         </Menu>
 
@@ -74,7 +78,22 @@
             <ComboBox x:Name="wyborWalutyArch" HorizontalAlignment="Left" Margin="168,4,0,0" Grid.Row="1" VerticalAlignment="Top" Width="132"/>
             <Label Content="Lista wybranych walut" HorizontalAlignment="Left" Grid.Row="2" VerticalAlignment="Top" FontSize="10" Padding="5,5,5,0" Margin="10,0,0,0"/>
             <ListBox x:Name="listaWalutArch" Margin="10,18,10,10" Grid.Row="2"/>
-
+        </Grid>
+        
+        <Grid x:Name="ZapiszGrid" Grid.Row="1" Visibility="Hidden">
+            <Label Content="Co zapisać?" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+            <CheckBox x:Name="zapiszListaAktualneCB" Content="Lista - aktualne" HorizontalAlignment="Left" Margin="30,36,0,0" VerticalAlignment="Top" IsChecked="True"/>
+            <CheckBox x:Name="zapiszListaArchCB" Content="Lista - archiwum" HorizontalAlignment="Left" Margin="30,57,0,0" VerticalAlignment="Top" IsChecked="True"/>
+            <Label Content="Jaki format?" HorizontalAlignment="Left" Margin="10,78,0,0" VerticalAlignment="Top"/>
+            <CheckBox x:Name="zapiszFormatTxt" Content="Plik tekstowy .txt" HorizontalAlignment="Left" Margin="30,104,0,0" VerticalAlignment="Top" IsChecked="True"/>
+            <CheckBox x:Name="zapiszFormatXml" Content="Dokument XML .xml" HorizontalAlignment="Left" Margin="30,125,0,0" VerticalAlignment="Top" IsChecked="True"/>
+            <CheckBox x:Name="zapiszFormatXls" Content="Arkusz kalkulacyjny .xls" HorizontalAlignment="Left" Margin="30,146,0,0" VerticalAlignment="Top" IsChecked="True"/>
+            <Label Content="Gdzie zapisać?" HorizontalAlignment="Left" Margin="10,185,0,0" VerticalAlignment="Top"/>
+            <TextBox x:Name="zapiszSciezka" HorizontalAlignment="Left" Height="23" Margin="102,187,0,0" TextWrapping="Wrap" Text="Ścieżka..." VerticalAlignment="Top" Width="245" IsEnabled="False"/>
+            <Button x:Name="zapiszWybierzFolder" Content="Wybierz folder..." HorizontalAlignment="Left" Margin="352,187,0,0" VerticalAlignment="Top" Width="100"/>
+            <Label Content="Nazwa pliku" HorizontalAlignment="Left" Margin="10,216,0,0" VerticalAlignment="Top"/>
+            <TextBox x:Name="zapiszNazwaPliku" HorizontalAlignment="Left" Height="23" Margin="102,218,0,0" TextWrapping="Wrap" Text="lista" VerticalAlignment="Top" Width="245"/>
+            <Button x:Name="zapiszButton" Content="ZAPISZ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="118" Height="38" Margin="0,244,0,0"/>
 
         </Grid>
     </Grid>

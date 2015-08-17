@@ -20,10 +20,12 @@ namespace KursyWalutNBP
     {
         // Tworzenie listy tabel kursów walut
         private readonly List<WalutyXML> _tabele = new List<WalutyXML>();
+        private ListBox _wLista;
 
         public MainWindow()
         {
             InitializeComponent();
+            _wLista = listBox;
 
             // Nieudane tworzenie nazwy dokumentu
             // Moze się przydać do pobierania danych archiwalnych
@@ -77,10 +79,104 @@ namespace KursyWalutNBP
             }
         }
 
-        private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        private void Window_KeyDown(object sender, KeyEventArgs e)
         {
+            // Wyjście z programu za pomocą klawisza ESCAPE
             if (e.Key == Key.Escape)
                 Close();
+        }
+
+        private void Aktualne_Click(object sender, RoutedEventArgs e)
+        {
+            _wLista = listBox;
+            AktualneGrid.Visibility = Visibility.Visible;
+            ArchiwumGrid.Visibility = Visibility.Hidden;
+            ZapiszGrid.Visibility = Visibility.Hidden;
+        }
+
+        private void Archiwum_Click(object sender, RoutedEventArgs e)
+        {
+            _wLista = listaWalutArch;
+            AktualneGrid.Visibility = Visibility.Hidden;
+            ArchiwumGrid.Visibility = Visibility.Visible;
+            ZapiszGrid.Visibility = Visibility.Hidden;
+        }
+
+        private void Zapisz_Click(object sender, RoutedEventArgs e)
+        {
+            AktualneGrid.Visibility = Visibility.Hidden;
+            ArchiwumGrid.Visibility = Visibility.Hidden;
+            ZapiszGrid.Visibility = Visibility.Visible;
+        }
+
+        private void Sortuj_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void WyswietlA_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void WyswietlB_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void WyswietlC_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Wyczysc_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void WykresLista_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void WykresA_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void WykresB_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void WykresC_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void WykresZmian_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Pomoc_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void OProgramie_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void StronaNBP_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Autorzy_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
