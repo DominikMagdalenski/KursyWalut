@@ -43,7 +43,7 @@
             </MenuItem>
         </Menu>
 
-        <Grid x:Name="AktualneGrid" Grid.Row="1">
+        <Grid x:Name="AktualneGrid" Grid.Row="1" Visibility="Hidden">
             <Grid.RowDefinitions>
                 <RowDefinition Height="60*"/>
                 <RowDefinition Height="264*"/>
@@ -60,22 +60,22 @@
             <Label Content="Wybierz walutę" Grid.Column="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" Width="273" Grid.Row="0" VerticalAlignment="Center" Margin="0,0,0,30"/>
         </Grid>
 
-        <Grid x:Name="ArchiwumGrid" Grid.Row="1" Visibility="Hidden">
+        <Grid x:Name="ArchiwumGrid" Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="29*"/>
                 <RowDefinition Height="29*"/>
                 <RowDefinition Height="270*"/>
             </Grid.RowDefinitions>
-            <Label Content="Dzień" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="224,0,0,0"/>
-            <ComboBox x:Name="wyborDniaArch" HorizontalAlignment="Left" Margin="264,4,0,0" VerticalAlignment="Top" Width="36"/>
-            <Label Content="Miesiąc" HorizontalAlignment="Left" Margin="83,0,0,0" VerticalAlignment="Top"/>
-            <ComboBox x:Name="wyborMiesiacaArch" HorizontalAlignment="Left" Margin="133,4,0,0" VerticalAlignment="Top" Width="86"/>
+            <Label Content="Dzień" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="277,0,0,0"/>
+            <ComboBox x:Name="wyborDniaArch" HorizontalAlignment="Left" Margin="317,4,0,0" VerticalAlignment="Top" Width="46" SelectionChanged="wyborDniaArch_SelectionChanged"/>
+            <Label Content="Miesiąc" HorizontalAlignment="Left" Margin="98,0,0,0" VerticalAlignment="Top"/>
+            <ComboBox x:Name="wyborMiesiacaArch" HorizontalAlignment="Left" Margin="148,4,0,0" VerticalAlignment="Top" Width="124" SelectionChanged="wyborMiesiacaArch_SelectionChanged"/>
             <Label Content="Rok" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-            <ComboBox x:Name="wyborRokuArch" HorizontalAlignment="Left" Margin="30,4,0,0" VerticalAlignment="Top" Width="48"/>
+            <ComboBox x:Name="wyborRokuArch" HorizontalAlignment="Left" Margin="30,4,0,0" VerticalAlignment="Top" Width="63" SelectionChanged="wyborRokuArch_SelectionChanged"/>
             <Label Content="Tabela" HorizontalAlignment="Left" Grid.Row="1" VerticalAlignment="Top"/>
-            <ComboBox x:Name="wyborTabeliArch" HorizontalAlignment="Left" Margin="45,4,0,0" Grid.Row="1" VerticalAlignment="Top" Width="71"/>
-            <Label Content="Waluta" HorizontalAlignment="Left" Margin="121,0,0,0" Grid.Row="1" VerticalAlignment="Top"/>
-            <ComboBox x:Name="wyborWalutyArch" HorizontalAlignment="Left" Margin="168,4,0,0" Grid.Row="1" VerticalAlignment="Top" Width="132"/>
+            <ComboBox x:Name="wyborTabeliArch" HorizontalAlignment="Left" Margin="45,4,0,0" Grid.Row="1" VerticalAlignment="Top" Width="103" SelectionChanged="wyborTabeliArch_SelectionChanged"/>
+            <Label Content="Waluta" HorizontalAlignment="Left" Margin="153,0,0,0" Grid.Row="1" VerticalAlignment="Top"/>
+            <ComboBox x:Name="wyborWalutyArch" HorizontalAlignment="Left" Margin="200,4,0,0" Grid.Row="1" VerticalAlignment="Top" Width="163" SelectionChanged="wyborWalutyArch_SelectionChanged"/>
             <Label Content="Lista wybranych walut" HorizontalAlignment="Left" Grid.Row="2" VerticalAlignment="Top" FontSize="10" Padding="5,5,5,0" Margin="10,0,0,0"/>
             <ListBox x:Name="listaWalutArch" Margin="10,18,10,10" Grid.Row="2"/>
         </Grid>

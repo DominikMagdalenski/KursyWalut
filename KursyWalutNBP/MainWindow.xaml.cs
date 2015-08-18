@@ -7,6 +7,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -20,11 +22,20 @@ namespace KursyWalutNBP
     {
         // Tworzenie listy tabel kursów walut
         private readonly List<WalutyXML> _tabele = new List<WalutyXML>();
+        private readonly List<WalutyXML> _tabeleArch = new List<WalutyXML>();
+        private List<String> _dirArch = new List<string>();
+        private readonly List<String> _listPlikowZMiesiaca = new List<string>(); 
         private ListBox _wLista;
 
         public MainWindow()
         {
             InitializeComponent();
+            Inicjalizacja();
+        }
+
+        private void Inicjalizacja()
+        {
+            // przechowywanie w _wLista referencji do listy z którą aktualnie pracujemy
             _wLista = listBox;
 
             // Nieudane tworzenie nazwy dokumentu
@@ -50,6 +61,13 @@ namespace KursyWalutNBP
                 {
                     wyborTabeli.Items.Add(tabela.Nazwa);
                 }
+
+                // wypełnienie combobox'a 'wyborRokuArch'
+                // najstarsze archiwum sięga 2002 roku
+                for (int i = 2002; i <= DateTime.Today.Year; i++)
+                {
+                    wyborRokuArch.Items.Add(i);
+                }
             }
             catch (Exception e)
             {
@@ -61,22 +79,37 @@ namespace KursyWalutNBP
         {
             // index wybranej waluty
             int index = wyborWaluty.SelectedIndex;
-            if (index > -1)
-                listBox.Items.Add(_tabele[wyborTabeli.SelectedIndex].ToString(index));
+            try
+            {
+                if (index > -1)
+                    listBox.Items.Add(_tabele[wyborTabeli.SelectedIndex].ToString(index));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Błąd");
+            }
         }
 
         private void wyborTabeli_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // Czyszczenie comboBox'a 'wyborWaluty' przed wypełnieniem nowymi danymi
-            wyborWaluty.Items.Clear();
-
-            // Wypełnianie walutami comboBox'a 'wyborWaluty'
-            // wyborTabeli.SelectedIndex - index wybranej tabeli
-            // _tabele[wyborTabeli.SelectedIndex].Lista - lista walut wybranej tabeli
-            foreach (Waluta waluta in _tabele[wyborTabeli.SelectedIndex].Lista)
+            try
             {
-                wyborWaluty.Items.Add(waluta.Nazwa);
+                // Czyszczenie comboBox'a 'wyborWaluty' przed wypełnieniem nowymi danymi
+                wyborWaluty.Items.Clear();
+
+                // Wypełnianie walutami comboBox'a 'wyborWaluty'
+                // wyborTabeli.SelectedIndex - index wybranej tabeli
+                // _tabele[wyborTabeli.SelectedIndex].Lista - lista walut wybranej tabeli
+                foreach (Waluta waluta in _tabele[wyborTabeli.SelectedIndex].Lista)
+                {
+                    wyborWaluty.Items.Add(waluta.Nazwa);
+                }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Błąd");
+            }
+            
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
@@ -177,6 +210,157 @@ namespace KursyWalutNBP
         private void Autorzy_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void wyborRokuArch_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                wyborMiesiacaArch.Items.Clear();
+
+                // wypełnianie combobox'a 'wyborMiesiacaArch'
+                for (int i = 0; i < 12; i++)
+                {
+                    wyborMiesiacaArch.Items.Add(CultureInfo.GetCultureInfo("pl-PL").DateTimeFormat.GetMonthName(i + 1));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Błąd");
+            }
+
+            // pobieranie pliku dir z nazwami plików .xml zawierającymi kursy walut
+            string dirTxt;
+            if (wyborRokuArch.SelectedItem.ToString() == DateTime.Today.Year.ToString())
+                dirTxt = "dir.txt";
+            else
+                dirTxt = "dir" + wyborRokuArch.SelectedItem + ".txt";
+
+            try
+            {
+                wyborDniaArch.Items.Clear();
+                System.Net.WebClient wc = new System.Net.WebClient();
+                string content = wc.DownloadString("http://www.nbp.pl/kursy/xml/" + dirTxt);
+                
+                // kopiowanie zawartości pliku dir do listy
+                _dirArch = content.Split('\n').ToList();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Błąd");
+            }
+        }
+
+        private void wyborMiesiacaArch_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            _listPlikowZMiesiaca.Clear();
+            try
+            {
+                wyborDniaArch.Items.Clear();
+                int miesiac = wyborMiesiacaArch.SelectedIndex + 1;
+                int indexItemFirst = 0, indexItemLast = 0;
+
+                // szukanie pierwszej i ostatniej nazwy pliku z wybranego misiąca
+                // z niktorych plikow dir wyciagany jest pusty wiersz i dodawany na koniec listy
+                // aby uniknąć błędów, dodano sprawdzenie _dirArch[i] != ""
+                for (int i = 0; i < _dirArch.Count && _dirArch[i] != ""; i++)
+                {
+                    if (Convert.ToInt32(_dirArch[i][7].ToString() + _dirArch[i][8]) < miesiac)
+                        indexItemLast = ++indexItemFirst;
+                    else if (Convert.ToInt32(_dirArch[i][7].ToString() + _dirArch[i][8]) == miesiac)
+                    {
+                        //listaWalutArch.Items.Add(_dirArch[i].TrimEnd());
+                        ++indexItemLast;
+                    }
+                }
+
+                // wypełnianie combobox'a 'wyborDniaArch'
+                int dzien = Convert.ToInt32(_dirArch[indexItemFirst][9].ToString() + _dirArch[indexItemFirst++][10]);
+                wyborDniaArch.Items.Add(dzien);
+                while (indexItemLast > indexItemFirst)
+                {
+                    _listPlikowZMiesiaca.Add(_dirArch[indexItemFirst].TrimEnd());
+                    int temp = Convert.ToInt32(_dirArch[indexItemFirst][9].ToString() + _dirArch[indexItemFirst++][10]);
+                    if (temp != dzien)
+                    {
+                        dzien = temp;
+                        wyborDniaArch.Items.Add(dzien);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Błąd");
+            }
+        }
+
+        private void wyborDniaArch_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            _tabeleArch.Clear();
+            try
+            {
+                wyborTabeliArch.Items.Clear();
+
+                // Pobieranie dostępnych tabel z wybranego dnia
+                foreach (string t in _listPlikowZMiesiaca)
+                {
+                    int dzien = Convert.ToInt32(t[9].ToString() + t[10]);
+                    if (Convert.ToInt32(wyborDniaArch.SelectedItem) == dzien)
+                    {
+                        if (t[0] == 'a')
+                            _tabeleArch.Add(new WalutyXML("http://www.nbp.pl/kursy/xml/" + t + ".xml", "Tabela A", true));
+                        else if (t[0] == 'b')
+                            _tabeleArch.Add(new WalutyXML("http://www.nbp.pl/kursy/xml/" + t + ".xml", "Tabela B", true));
+                        else if (t[0] == 'c')
+                            _tabeleArch.Add(new WalutyXML("http://www.nbp.pl/kursy/xml/" + t + ".xml", "Tabela C", false));
+                    }
+                    else if (Convert.ToInt32(wyborDniaArch.SelectedItem) < dzien)
+                        break;
+                }
+
+                _tabeleArch.Sort((x,y) => String.CompareOrdinal(x.Nazwa, y.Nazwa));
+
+                // Wypełnianie combobox'a 'wyborTabeliArch'
+                foreach (WalutyXML tabela in _tabeleArch)
+                {
+                    wyborTabeliArch.Items.Add(tabela.Nazwa);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Błąd");
+            }
+            
+        }
+
+        private void wyborTabeliArch_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                wyborWalutyArch.Items.Clear();
+
+                if(wyborTabeliArch.SelectedIndex > -1)
+                    foreach (Waluta waluta in _tabeleArch[wyborTabeliArch.SelectedIndex].Lista)
+                            wyborWalutyArch.Items.Add(waluta.Nazwa);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Błąd");
+            }
+        }
+
+        private void wyborWalutyArch_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                if (wyborWalutyArch.SelectedIndex > -1)
+                    listaWalutArch.Items.Add(
+                        _tabeleArch[wyborTabeliArch.SelectedIndex].ToString(wyborWalutyArch.SelectedIndex));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "Błąd");
+            }
         }
     }
 }
