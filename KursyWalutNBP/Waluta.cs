@@ -15,6 +15,12 @@ namespace KursyWalutNBP
         public double KursKupna { get; set; }       // kurs kupna
         public double KursSprzedazy { get; set; }   // kurs sprzedaży
 
+        // właściwości potrzebne z powodu różnicy we wzorcach dokumentów XML
+        // do maja 2004 roku dla tabel A i C
+        // oraz tylko NazwaKraju do kwietnia 2012 roku dla tabeli B
+        public string NazwaKraju { get; set; }      // nazwa kraju
+        //public int SymbolWaluty { get; set; }       // symbol waluty
+
         // konstruktor domyślny
         public Waluta() { }
 

@@ -23,8 +23,11 @@ namespace KursyWalutNBP
         // Tworzenie listy tabel kursów walut
         private readonly List<WalutyXML> _tabele = new List<WalutyXML>();
         private readonly List<WalutyXML> _tabeleArch = new List<WalutyXML>();
+        //private readonly List<Waluta> _walutyArch = new List<Waluta>(); 
         private List<String> _dirArch = new List<string>();
         private readonly List<String> _listPlikowZMiesiaca = new List<string>(); 
+
+        // lista walut, nad którą aktualnie użytkownik pracuje
         private ListBox _wLista;
 
         public MainWindow()
@@ -223,6 +226,12 @@ namespace KursyWalutNBP
                 {
                     wyborMiesiacaArch.Items.Add(CultureInfo.GetCultureInfo("pl-PL").DateTimeFormat.GetMonthName(i + 1));
                 }
+                
+                // usuwanie nieodpowiednich miesięcy z combobox'a 'wyborMiesiacaArch'
+                // zabieg potrzebny dla ustawienia bieżącego roku
+                if (wyborRokuArch.SelectedItem.ToString() == DateTime.Today.Year.ToString())
+                    for (int i = 11; i >= DateTime.Today.Month; i--)
+                        wyborMiesiacaArch.Items.RemoveAt(i);
             }
             catch (Exception ex)
             {
@@ -254,6 +263,7 @@ namespace KursyWalutNBP
         private void wyborMiesiacaArch_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             _listPlikowZMiesiaca.Clear();
+
             try
             {
                 wyborDniaArch.Items.Clear();
@@ -339,9 +349,17 @@ namespace KursyWalutNBP
             {
                 wyborWalutyArch.Items.Clear();
 
+                // wypełnianie combobox'a 'wyborWalutyArch'
                 if(wyborTabeliArch.SelectedIndex > -1)
                     foreach (Waluta waluta in _tabeleArch[wyborTabeliArch.SelectedIndex].Lista)
+                    {
+                        if (waluta.Nazwa != null && waluta.NazwaKraju != null)
+                            wyborWalutyArch.Items.Add(waluta.NazwaKraju + " " + waluta.Nazwa);
+                        else if (waluta.Nazwa != null)
                             wyborWalutyArch.Items.Add(waluta.Nazwa);
+                        else
+                            wyborWalutyArch.Items.Add(waluta.NazwaKraju);
+                    }
             }
             catch (Exception ex)
             {

@@ -58,6 +58,10 @@ namespace KursyWalutNBP
                 xmlNode = doc.GetElementsByTagName("kod_waluty").Item(i);
                 if (xmlNode != null)
                     _lista[i].Kod = xmlNode.InnerText;
+                xmlNode = doc.GetElementsByTagName("nazwa_kraju").Item(i);
+                if (xmlNode != null)
+                    _lista[i].NazwaKraju = xmlNode.InnerText;
+                
 
                 if (kursSredni)
                 {
@@ -84,7 +88,14 @@ namespace KursyWalutNBP
         // 1. arg - index - indeks wybranej waluty w comboBox'ie
         public string ToString(int index)
         {
-            string kurs = Lista[index].Nazwa + " " + Lista[index].Przelicznik + " " + Lista[index].Kod;
+            string kurs;
+
+            if(Lista[index].Nazwa != null && Lista[index].NazwaKraju != null)
+                kurs = Lista[index].NazwaKraju + " " + Lista[index].Nazwa + " " + Lista[index].Przelicznik + " " + Lista[index].Kod;
+            else if (Lista[index].Nazwa != null)
+                kurs = Lista[index].Nazwa + " " + Lista[index].Przelicznik + " " + Lista[index].Kod;
+            else
+                kurs = Lista[index].NazwaKraju + " " + Lista[index].Przelicznik + " " + Lista[index].Kod;
             
             // czy w doc XML jest tylko kurs sredni - true? czy kupna/sprzedaży - false?
             if (KursSredni)
