@@ -23,7 +23,6 @@ namespace KursyWalutNBP
         // Tworzenie listy tabel kursów walut
         private readonly List<WalutyXML> _tabele = new List<WalutyXML>();
         private readonly List<WalutyXML> _tabeleArch = new List<WalutyXML>();
-        //private readonly List<Waluta> _walutyArch = new List<Waluta>(); 
         private List<String> _dirArch = new List<string>();
         private readonly List<String> _listPlikowZMiesiaca = new List<string>(); 
 
@@ -40,14 +39,6 @@ namespace KursyWalutNBP
         {
             // przechowywanie w _wLista referencji do listy z którą aktualnie pracujemy
             _wLista = listBox;
-
-            // Nieudane tworzenie nazwy dokumentu
-            // Moze się przydać do pobierania danych archiwalnych
-            // http://www.nbp.pl/home.aspx?f=/kursy/instrukcja_pobierania_kursow_walut.html
-            //DateTime today = DateTime.Today;
-            //string year = today.Year.ToString()[2].ToString() + today.Year.ToString()[3].ToString();
-            //string filename = "http://www.nbp.pl/kursy/xml/a" + today.DayOfYear + "z" + year + today.Month + today.Day + ".xml";
-            //listBox.Items.Add(filename);
 
             try
             {
@@ -271,17 +262,14 @@ namespace KursyWalutNBP
                 int indexItemFirst = 0, indexItemLast = 0;
 
                 // szukanie pierwszej i ostatniej nazwy pliku z wybranego misiąca
-                // z niktorych plikow dir wyciagany jest pusty wiersz i dodawany na koniec listy
+                // z niektorych plikow dir wyciagany jest pusty wiersz i dodawany na koniec listy
                 // aby uniknąć błędów, dodano sprawdzenie _dirArch[i] != ""
                 for (int i = 0; i < _dirArch.Count && _dirArch[i] != ""; i++)
                 {
                     if (Convert.ToInt32(_dirArch[i][7].ToString() + _dirArch[i][8]) < miesiac)
                         indexItemLast = ++indexItemFirst;
                     else if (Convert.ToInt32(_dirArch[i][7].ToString() + _dirArch[i][8]) == miesiac)
-                    {
-                        //listaWalutArch.Items.Add(_dirArch[i].TrimEnd());
                         ++indexItemLast;
-                    }
                 }
 
                 // wypełnianie combobox'a 'wyborDniaArch'
@@ -369,11 +357,18 @@ namespace KursyWalutNBP
 
         private void wyborWalutyArch_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            string miesiac = (wyborMiesiacaArch.SelectedIndex + 1) > 9
+                ? wyborMiesiacaArch.SelectedIndex.ToString()
+                : "0" + wyborMiesiacaArch.SelectedIndex;
             try
             {
+                string dzien = Convert.ToInt32(wyborDniaArch.SelectedItem) > 9
+                ? wyborDniaArch.SelectedItem.ToString()
+                : "0" + wyborDniaArch.SelectedItem;
+
                 if (wyborWalutyArch.SelectedIndex > -1)
-                    listaWalutArch.Items.Add(
-                        _tabeleArch[wyborTabeliArch.SelectedIndex].ToString(wyborWalutyArch.SelectedIndex));
+                    listaWalutArch.Items.Add(wyborRokuArch.SelectedItem + "." + miesiac + "." + dzien + " "
+                        + _tabeleArch[wyborTabeliArch.SelectedIndex].ToString(wyborWalutyArch.SelectedIndex));
             }
             catch (Exception ex)
             {
