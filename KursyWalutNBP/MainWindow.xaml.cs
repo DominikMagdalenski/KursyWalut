@@ -76,7 +76,7 @@ namespace KursyWalutNBP
             try
             {
                 if (index > -1)
-                    listBox.Items.Add(_tabele[wyborTabeli.SelectedIndex].ToString(index));
+                    listBox.Items.Add(_tabele[wyborTabeli.SelectedIndex].Lista[index]);
             }
             catch (Exception ex)
             {
@@ -341,12 +341,12 @@ namespace KursyWalutNBP
                 if(wyborTabeliArch.SelectedIndex > -1)
                     foreach (Waluta waluta in _tabeleArch[wyborTabeliArch.SelectedIndex].Lista)
                     {
-                        if (waluta.Nazwa != null && waluta.NazwaKraju != null)
-                            wyborWalutyArch.Items.Add(waluta.NazwaKraju + " " + waluta.Nazwa);
+                        if (waluta.Nazwa != null && waluta.Kraj != null)
+                            wyborWalutyArch.Items.Add(waluta.Kraj + " " + waluta.Nazwa);
                         else if (waluta.Nazwa != null)
                             wyborWalutyArch.Items.Add(waluta.Nazwa);
                         else
-                            wyborWalutyArch.Items.Add(waluta.NazwaKraju);
+                            wyborWalutyArch.Items.Add(waluta.Kraj);
                     }
             }
             catch (Exception ex)
@@ -360,15 +360,23 @@ namespace KursyWalutNBP
             string miesiac = (wyborMiesiacaArch.SelectedIndex + 1) > 9
                 ? wyborMiesiacaArch.SelectedIndex.ToString()
                 : "0" + wyborMiesiacaArch.SelectedIndex;
+
+            int i = wyborWalutyArch.SelectedIndex;
+            
             try
             {
                 string dzien = Convert.ToInt32(wyborDniaArch.SelectedItem) > 9
-                ? wyborDniaArch.SelectedItem.ToString()
-                : "0" + wyborDniaArch.SelectedItem;
+                    ? wyborDniaArch.SelectedItem.ToString()
+                    : "0" + wyborDniaArch.SelectedItem;
 
-                if (wyborWalutyArch.SelectedIndex > -1)
-                    listaWalutArch.Items.Add(wyborRokuArch.SelectedItem + "." + miesiac + "." + dzien + " "
-                        + _tabeleArch[wyborTabeliArch.SelectedIndex].ToString(wyborWalutyArch.SelectedIndex));
+                if (i > -1)
+                {
+                    _tabeleArch[wyborTabeliArch.SelectedIndex].Lista[i].Dzien =
+                        wyborRokuArch.SelectedItem + "." + miesiac +
+                        "." + dzien;
+                    listaWalutArch.Items.Add(
+                        _tabeleArch[wyborTabeliArch.SelectedIndex].Lista[i]);
+                }
             }
             catch (Exception ex)
             {

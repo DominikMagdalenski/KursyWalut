@@ -54,13 +54,25 @@
             </Grid.ColumnDefinitions>
 
             <ComboBox x:Name="wyborWaluty" SelectionChanged="wyborWaluty_SelectionChanged" Grid.Column="1" VerticalAlignment="Center" Height="22" Grid.Row="0" Margin="8,10,8,0"/>
-            <ListBox x:Name="listBox" Grid.ColumnSpan="2" Grid.Row="1" Margin="10,0,10,10"/>
             <ComboBox x:Name="wyborTabeli" SelectionChanged="wyborTabeli_SelectionChanged" Height="22" Grid.Row="0" VerticalAlignment="Center" Margin="8,10,8,0"/>
             <Label Content="Wybierz tabelę" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="273" HorizontalAlignment="Center" Grid.Row="0" VerticalAlignment="Center" Margin="0,0,0,30"/>
             <Label Content="Wybierz walutę" Grid.Column="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" Width="273" Grid.Row="0" VerticalAlignment="Center" Margin="0,0,0,30"/>
+
+            <ListView x:Name="listBox" Grid.ColumnSpan="2" Grid.Row="1" Margin="10,0,10,10">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Waluta" Width="260" DisplayMemberBinding="{Binding Nazwa}"></GridViewColumn>
+                        <GridViewColumn Header="Przelicznik" Width="40" DisplayMemberBinding="{Binding Przelicznik}"></GridViewColumn>
+                        <GridViewColumn Header="Kod" Width="40" DisplayMemberBinding="{Binding Kod}"></GridViewColumn>
+                        <GridViewColumn Header="średni" Width="55" DisplayMemberBinding="{Binding KursSredni}"></GridViewColumn>
+                        <GridViewColumn Header="kupno" Width="55" DisplayMemberBinding="{Binding KursKupna}"></GridViewColumn>
+                        <GridViewColumn Header="sprzedaż" Width="55" DisplayMemberBinding="{Binding KursSprzedazy}"></GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
         </Grid>
 
-        <Grid x:Name="ArchiwumGrid" Grid.Row="1" Visibility="Hidden">
+        <Grid x:Name="ArchiwumGrid" Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="29*"/>
                 <RowDefinition Height="29*"/>
@@ -77,10 +89,24 @@
             <Label Content="Waluta" HorizontalAlignment="Left" Margin="153,0,0,0" Grid.Row="1" VerticalAlignment="Top"/>
             <ComboBox x:Name="wyborWalutyArch" HorizontalAlignment="Left" Margin="200,4,0,0" Grid.Row="1" VerticalAlignment="Top" Width="163" SelectionChanged="wyborWalutyArch_SelectionChanged"/>
             <Label Content="Lista wybranych walut" HorizontalAlignment="Left" Grid.Row="2" VerticalAlignment="Top" FontSize="10" Padding="5,5,5,0" Margin="10,0,0,0"/>
-            <ListBox x:Name="listaWalutArch" Margin="10,18,10,10" Grid.Row="2"/>
+
+            <ListView x:Name="listaWalutArch" Grid.Row="2" Margin="10,18,10,10">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Dzień" Width="70" DisplayMemberBinding="{Binding Dzien}"></GridViewColumn>
+                        <GridViewColumn Header="Waluta" Width="100" DisplayMemberBinding="{Binding Nazwa}"></GridViewColumn>
+                        <GridViewColumn Header="Kraj" Width="100" DisplayMemberBinding="{Binding Kraj}"></GridViewColumn>
+                        <GridViewColumn Header="Przelicznik" Width="40" DisplayMemberBinding="{Binding Przelicznik}"></GridViewColumn>
+                        <GridViewColumn Header="Kod" Width="40" DisplayMemberBinding="{Binding Kod}"></GridViewColumn>
+                        <GridViewColumn Header="średni" Width="55" DisplayMemberBinding="{Binding KursSredni}"></GridViewColumn>
+                        <GridViewColumn Header="kupno" Width="55" DisplayMemberBinding="{Binding KursKupna}"></GridViewColumn>
+                        <GridViewColumn Header="sprzedaż" Width="55" DisplayMemberBinding="{Binding KursSprzedazy}"></GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
         </Grid>
         
-        <Grid x:Name="ZapiszGrid" Grid.Row="1">
+        <Grid x:Name="ZapiszGrid" Grid.Row="1" Visibility="Hidden">
             <Label Content="Co zapisać?" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
             <CheckBox x:Name="zapiszListaAktualneCB" Content="Lista - aktualne" HorizontalAlignment="Left" Margin="30,36,0,0" VerticalAlignment="Top" IsChecked="True"/>
             <CheckBox x:Name="zapiszListaArchCB" Content="Lista - archiwum" HorizontalAlignment="Left" Margin="30,57,0,0" VerticalAlignment="Top" IsChecked="True"/>

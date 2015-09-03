@@ -14,11 +14,12 @@ namespace KursyWalutNBP
         public double KursSredni { get; set; }      // kurs średni
         public double KursKupna { get; set; }       // kurs kupna
         public double KursSprzedazy { get; set; }   // kurs sprzedaży
+        public string Dzien { get; set; }           // z ktorego dnia kurs waluty?
 
         // właściwość potrzebna z powodu różnicy we wzorcach dokumentów XML
         // do maja 2004 roku dla tabel A i C
         // oraz do kwietnia 2012 roku dla tabeli B
-        public string NazwaKraju { get; set; }      // nazwa kraju
+        public string Kraj { get; set; }
 
         // konstruktor domyślny
         public Waluta() { }
