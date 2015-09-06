@@ -1,0 +1,10 @@
+﻿<Window x:Name="pobieranieWindow" x:Class="KursyWalutNBP.PobieranieWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Pobieranie" Height="92.783" Width="417.526" Icon="green_dollar.ico" ResizeMode="NoResize">
+    <Grid Margin="0,0,0,-5">
+        <ProgressBar x:Name="progresBarPobieranie" HorizontalAlignment="Left" Height="15" Margin="10,38,0,0" VerticalAlignment="Top" Width="392"/>
+        <Label Content="Pobieranie aktualnych kursów..." HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,30"/>
+
+    </Grid>
+</Window>

@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Xml;
 
 namespace KursyWalutNBP
@@ -39,7 +40,7 @@ namespace KursyWalutNBP
 
             // pobieranie dokumentu z adresu URL - filename
             doc.Load(filename);
-            
+
             // obliczanie ilości walut
             _count = doc.GetElementsByTagName("pozycja").Count;
 

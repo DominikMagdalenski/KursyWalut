@@ -43,7 +43,7 @@
             </MenuItem>
         </Menu>
 
-        <Grid x:Name="AktualneGrid" Grid.Row="1" Visibility="Hidden">
+        <Grid x:Name="AktualneGrid" Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="60*"/>
                 <RowDefinition Height="264*"/>
@@ -53,8 +53,8 @@
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="wyborWaluty" SelectionChanged="wyborWaluty_SelectionChanged" Grid.Column="1" VerticalAlignment="Center" Height="22" Grid.Row="0" Margin="8,10,8,0"/>
-            <ComboBox x:Name="wyborTabeli" SelectionChanged="wyborTabeli_SelectionChanged" Height="22" Grid.Row="0" VerticalAlignment="Center" Margin="8,10,8,0"/>
+            <ComboBox x:Name="wyborWaluty" SelectionChanged="wyborWaluty_SelectionChanged" Grid.Column="1" VerticalAlignment="Center" Height="22" Grid.Row="0" Margin="8,24,8,0"/>
+            <ComboBox x:Name="wyborTabeli" SelectionChanged="wyborTabeli_SelectionChanged" Height="22" Grid.Row="0" VerticalAlignment="Center" Margin="8,24,8,0" BorderThickness="1"/>
             <Label Content="Wybierz tabelę" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="273" HorizontalAlignment="Center" Grid.Row="0" VerticalAlignment="Center" Margin="0,0,0,30"/>
             <Label Content="Wybierz walutę" Grid.Column="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" Width="273" Grid.Row="0" VerticalAlignment="Center" Margin="0,0,0,30"/>
 
@@ -70,9 +70,10 @@
                     </GridView>
                 </ListView.View>
             </ListView>
+            <Button x:Name="pobierzAktualneKursy" Content="Pobierz aktualne kursy" HorizontalAlignment="Left" Margin="200,3,0,0" VerticalAlignment="Top" Width="149" Grid.ColumnSpan="2" Click="pobierzAktualneKursy_Click"/>
         </Grid>
 
-        <Grid x:Name="ArchiwumGrid" Grid.Row="1">
+        <Grid x:Name="ArchiwumGrid" Grid.Row="1" Visibility="Hidden">
             <Grid.RowDefinitions>
                 <RowDefinition Height="29*"/>
                 <RowDefinition Height="29*"/>
@@ -105,7 +106,7 @@
                 </ListView.View>
             </ListView>
         </Grid>
-        
+
         <Grid x:Name="ZapiszGrid" Grid.Row="1" Visibility="Hidden">
             <Label Content="Co zapisać?" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
             <CheckBox x:Name="zapiszListaAktualneCB" Content="Lista - aktualne" HorizontalAlignment="Left" Margin="30,36,0,0" VerticalAlignment="Top" IsChecked="True"/>
@@ -115,11 +116,11 @@
             <CheckBox x:Name="zapiszFormatXml" Content="Dokument XML .xml" HorizontalAlignment="Left" Margin="30,125,0,0" VerticalAlignment="Top" IsChecked="True"/>
             <CheckBox x:Name="zapiszFormatXls" Content="Arkusz kalkulacyjny .xls" HorizontalAlignment="Left" Margin="30,146,0,0" VerticalAlignment="Top" IsChecked="True"/>
             <Label Content="Gdzie zapisać?" HorizontalAlignment="Left" Margin="10,185,0,0" VerticalAlignment="Top"/>
-            <TextBox x:Name="zapiszSciezka" HorizontalAlignment="Left" Height="23" Margin="102,187,0,0" TextWrapping="Wrap" Text="Ścieżka..." VerticalAlignment="Top" Width="245" IsEnabled="False"/>
-            <Button x:Name="zapiszWybierzFolder" Content="Wybierz folder..." HorizontalAlignment="Left" Margin="352,187,0,0" VerticalAlignment="Top" Width="100"/>
+            <TextBox x:Name="zapiszSciezka" HorizontalAlignment="Left" Height="23" Margin="102,187,0,0" TextWrapping="Wrap" Text="C:\KursyWalut" VerticalAlignment="Top" Width="245"/>
+            <Button x:Name="zapiszWybierzFolder" Content="Wybierz folder..." HorizontalAlignment="Left" Margin="352,187,0,0" VerticalAlignment="Top" Width="100" Click="zapiszWybierzFolder_Click"/>
             <Label Content="Nazwa pliku" HorizontalAlignment="Left" Margin="10,216,0,0" VerticalAlignment="Top"/>
             <TextBox x:Name="zapiszNazwaPliku" HorizontalAlignment="Left" Height="23" Margin="102,218,0,0" TextWrapping="Wrap" Text="lista" VerticalAlignment="Top" Width="245"/>
-            <Button x:Name="zapiszButton" Content="ZAPISZ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="118" Height="38" Margin="0,244,0,0"/>
+            <Button x:Name="zapiszButton" Content="ZAPISZ" HorizontalAlignment="Center" VerticalAlignment="Center" Width="118" Height="38" Margin="0,244,0,0" Click="zapiszButton_Click"/>
 
         </Grid>
     </Grid>

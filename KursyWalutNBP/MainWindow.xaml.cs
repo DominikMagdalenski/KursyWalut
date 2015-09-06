@@ -7,11 +7,18 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Forms;
 using System.Windows.Input;
+using KeyEventArgs = System.Windows.Input.KeyEventArgs;
+using ListBox = System.Windows.Controls.ListBox;
+using MessageBox = System.Windows.MessageBox;
 
 namespace KursyWalutNBP
 {
@@ -24,7 +31,10 @@ namespace KursyWalutNBP
         private readonly List<WalutyXML> _tabele = new List<WalutyXML>();
         private readonly List<WalutyXML> _tabeleArch = new List<WalutyXML>();
         private List<String> _dirArch = new List<string>();
-        private readonly List<String> _listPlikowZMiesiaca = new List<string>(); 
+        private readonly List<String> _listPlikowZMiesiaca = new List<string>();
+
+        private BackgroundWorker _bkgWorker;
+        private PobieranieWindow _dwnlWindow;
 
         // lista walut, nad którą aktualnie użytkownik pracuje
         private ListBox _wLista;
@@ -42,20 +52,6 @@ namespace KursyWalutNBP
 
             try
             {
-                // Dodawanie tabel do listy kursów walut
-                // 1. arg - adres URL
-                // 2. arg - nazwa Tabeli
-                // 3. arg - czy w dokumencie xml znajduje się kurs średni - true (czy kurs kupna/sprzedaży - false)?
-                _tabele.Add(new WalutyXML("http://www.nbp.pl/kursy/xml/LastA.xml", "Tabela A", true));
-                _tabele.Add(new WalutyXML("http://www.nbp.pl/kursy/xml/LastB.xml", "Tabela B", true));
-                _tabele.Add(new WalutyXML("http://www.nbp.pl/kursy/xml/LastC.xml", "Tabela C", false));
-
-                // Dodawanie tabel do comboBox'a 'wyborTabeli' z listy _tabele
-                foreach (WalutyXML tabela in _tabele)
-                {
-                    wyborTabeli.Items.Add(tabela.Nazwa);
-                }
-
                 // wypełnienie combobox'a 'wyborRokuArch'
                 // najstarsze archiwum sięga 2002 roku
                 for (int i = 2002; i <= DateTime.Today.Year; i++)
@@ -65,8 +61,82 @@ namespace KursyWalutNBP
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message, "Błąd");
+                MessageBox.Show(e.ToString(), "Błąd");
             }
+        }
+
+        private void pobierzAktualneKursy_Click(object sender, RoutedEventArgs e)
+        {
+            // Rozpoczęcie pobierania aktualnych kursów w tle
+            // Pomaga w tym klasa BackgroundWorker
+            if (_bkgWorker == null)
+            {
+                _bkgWorker = new BackgroundWorker();
+                // tworzenie nowego okienka, które uwidacznia progres pobierania
+                _dwnlWindow = new PobieranieWindow();
+                _bkgWorker.DoWork += _bkgWorker_DoWork;
+                _bkgWorker.RunWorkerCompleted += _bkgWorker_RunWorkerCompleted;
+                _bkgWorker.ProgressChanged += _bkgWorker_ProgressChanged;
+                _bkgWorker.WorkerReportsProgress = true;
+            }
+            // deaktywowanie przycisku pobierania
+            pobierzAktualneKursy.IsEnabled = false;
+            pobierzAktualneKursy.Content = "Pobieranie...";
+            // wyświetlenie okienka z progresem pobierania
+            _dwnlWindow.Show();
+            // rozpoczęcie pobierania za pomocą asynchronicznej metody RunWorkerAsync,
+            // którą udostępnia klasa BackgroundWorker
+            _bkgWorker.RunWorkerAsync();
+        }
+
+        private void _bkgWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                // Dodawanie tabel do listy kursów walut
+                // 1. arg - adres URL
+                // 2. arg - nazwa Tabeli
+                // 3. arg - czy w dokumencie xml znajduje się kurs średni - true (czy kurs kupna/sprzedaży - false)?
+                _tabele.Add(new WalutyXML("http://www.nbp.pl/kursy/xml/LastA.xml", "Tabela A", true));
+                // raportowanie progresu (wywołuje zdarzenie ProgressChanged)
+                _bkgWorker.ReportProgress(33);
+                _tabele.Add(new WalutyXML("http://www.nbp.pl/kursy/xml/LastB.xml", "Tabela B", true));
+                _bkgWorker.ReportProgress(66);
+                _tabele.Add(new WalutyXML("http://www.nbp.pl/kursy/xml/LastC.xml", "Tabela C", false));
+                _bkgWorker.ReportProgress(100);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Błąd");
+            }
+        }
+
+        // zdarzenie wywoływane, kiedy _bkgWorker zakończy prace,
+        // czyli kiedy zostaną pobrane dokumenty XML
+        // z aktualnymi kursami walut
+        private void _bkgWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            // zamyka okienko z progresem pobierania
+            _dwnlWindow.Close();
+            pobierzAktualneKursy.Content = "Pobieranie zakończone";
+            try
+            {
+                // Dodawanie tabel do comboBox'a 'wyborTabeli' z listy _tabele
+                foreach (WalutyXML tabela in _tabele)
+                {
+                    wyborTabeli.Items.Add(tabela.Nazwa);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Błąd");
+            }
+        }
+
+        private void _bkgWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            // aktualizuje progressBar w oknie _dwnlWindow
+            _dwnlWindow.progresBarPobieranie.Value = e.ProgressPercentage;
         }
 
         private void wyborWaluty_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -229,7 +299,7 @@ namespace KursyWalutNBP
                 MessageBox.Show(ex.Message, "Błąd");
             }
 
-            // pobieranie pliku dir z nazwami plików .xml zawierającymi kursy walut
+            // ustalanie nazwy pliku dir w zależności od wybranego roku
             string dirTxt;
             if (wyborRokuArch.SelectedItem.ToString() == DateTime.Today.Year.ToString())
                 dirTxt = "dir.txt";
@@ -239,7 +309,8 @@ namespace KursyWalutNBP
             try
             {
                 wyborDniaArch.Items.Clear();
-                System.Net.WebClient wc = new System.Net.WebClient();
+                // pobieranie pliku dir z nazwami plików .xml zawierającymi kursy walut
+                WebClient wc = new WebClient();
                 string content = wc.DownloadString("http://www.nbp.pl/kursy/xml/" + dirTxt);
                 
                 // kopiowanie zawartości pliku dir do listy
@@ -357,6 +428,8 @@ namespace KursyWalutNBP
 
         private void wyborWalutyArch_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            // ustawianie stringu 'miesiac' w zależności od wybranego miesiąca
+            // 01, 02,..., 09, 10, 11, 12
             string miesiac = (wyborMiesiacaArch.SelectedIndex + 1) > 9
                 ? wyborMiesiacaArch.SelectedIndex.ToString()
                 : "0" + wyborMiesiacaArch.SelectedIndex;
@@ -365,10 +438,13 @@ namespace KursyWalutNBP
             
             try
             {
+                // ustalanie stringu dzień
+                // 01, 02,..., 09, 10, 11,..., 31
                 string dzien = Convert.ToInt32(wyborDniaArch.SelectedItem) > 9
                     ? wyborDniaArch.SelectedItem.ToString()
                     : "0" + wyborDniaArch.SelectedItem;
 
+                // dodawanie wybranej waluty do listy wybranych walut (archiwalnych)
                 if (i > -1)
                 {
                     _tabeleArch[wyborTabeliArch.SelectedIndex].Lista[i].Dzien =
@@ -376,6 +452,82 @@ namespace KursyWalutNBP
                         "." + dzien;
                     listaWalutArch.Items.Add(
                         _tabeleArch[wyborTabeliArch.SelectedIndex].Lista[i]);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Błąd");
+            }
+        }
+
+        private void zapiszWybierzFolder_Click(object sender, RoutedEventArgs e)
+        {
+            // tworzenie okienka, w którym użytkownik może wybrać folder,
+            // w celu ustalenia ścieżki do zapisu list wybranych walut
+            FolderBrowserDialog folderDialog = new FolderBrowserDialog { SelectedPath = "C:\\KursyWalut\\" };
+            DialogResult result = folderDialog.ShowDialog();
+            if (result.ToString() == "OK")
+                zapiszSciezka.Text = folderDialog.SelectedPath;
+        }
+
+        private void zapiszButton_Click(object sender, RoutedEventArgs e)
+        {
+            // jeśli nie wybrano żadnej z list do zapisu,
+            // to wyświetl MessageBox z informacją o błędzie,
+            // oraz zakończ zdarzenie
+            if (!zapiszListaAktualneCB.IsEnabled && !zapiszListaArchCB.IsEnabled)
+            {
+                MessageBox.Show("Wybierz jakąś listę do zapisania.", "Błąd");
+                return;
+            }
+            // jeśli nie wybrano żadnego formatu zapisu,
+            // to wyświetl MessageBox z informacją
+            // i zakończ zdarzenie
+            if (!zapiszFormatTxt.IsEnabled && !zapiszFormatXml.IsEnabled && !zapiszFormatXls.IsEnabled)
+            {
+                MessageBox.Show("Wybierz jakiś format pliku.", "Błąd");
+                return;
+            }
+            try
+            {
+                // modyfikacja ścieżki zapisu polegająca na podwojeniu
+                // występujących w niej backslashy '\'
+                // jest to potrzebne, ponieważ '\' jest znakiem specjalnym
+                // (escape characters)
+                string sciezka = zapiszSciezka.Text.Replace(@"\", @"\\");
+                // utwórz folder jeśli nie istnieje
+                if (!Directory.Exists(sciezka))
+                    Directory.CreateDirectory(sciezka);
+                // jeśli wybrano liste aktulnych kursów do zapisu, to:
+                if (zapiszListaAktualneCB.IsEnabled)
+                {
+                    // jeśli wybrany format to Plik tekstowy .txt, to:
+                    if (zapiszFormatTxt.IsEnabled)
+                    {
+                        // zapisz ścieżkę do pliku w obiekcie file
+                        string file = sciezka + "\\" + zapiszNazwaPliku.Text + ".txt";
+                        // otwórz plik, a jeśli nie istnieje, to go utwórz
+                        // z prawami do zapisu
+                        FileStream fs = new FileStream(file, FileMode.OpenOrCreate, FileAccess.Write);
+                        // otwórz strumień do zapisu, do pliku
+                        StreamWriter sw = new StreamWriter(fs);
+                        // poniższe dwie instrukcje czyszczą zawartość pliku
+                        fs.SetLength(0);
+                        fs.Flush();
+                        // poniższa pętla zapisuje dane z listy wybranych,
+                        // aktualnych kursów walut do pliku .txt
+                        foreach (Waluta item in listBox.Items)
+                        {
+                            // zapisz do pliku listę
+                            sw.WriteLine(item.Nazwa + "," + item.Kraj + ","
+                                        + item.Przelicznik + "," + item.Kod
+                                        + "," + item.KursSredni + ","
+                                        + item.KursKupna + "," + item.KursSprzedazy);
+                        }
+                        // zamykanie strumienia oraz pliku
+                        sw.Close();
+                        fs.Close();
+                    }
                 }
             }
             catch (Exception ex)
