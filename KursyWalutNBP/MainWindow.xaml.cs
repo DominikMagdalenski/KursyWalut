@@ -16,6 +16,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Input;
+using System.Xml;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using ListBox = System.Windows.Controls.ListBox;
 using MessageBox = System.Windows.MessageBox;
@@ -475,7 +476,7 @@ namespace KursyWalutNBP
             // jeśli nie wybrano żadnej z list do zapisu,
             // to wyświetl MessageBox z informacją o błędzie,
             // oraz zakończ zdarzenie
-            if (!zapiszListaAktualneCB.IsEnabled && !zapiszListaArchCB.IsEnabled)
+            if (zapiszListaAktualneCB.IsChecked == false && zapiszListaArchCB.IsChecked == false)
             {
                 MessageBox.Show("Wybierz jakąś listę do zapisania.", "Błąd");
                 return;
@@ -483,7 +484,7 @@ namespace KursyWalutNBP
             // jeśli nie wybrano żadnego formatu zapisu,
             // to wyświetl MessageBox z informacją
             // i zakończ zdarzenie
-            if (!zapiszFormatTxt.IsEnabled && !zapiszFormatXml.IsEnabled && !zapiszFormatXls.IsEnabled)
+            if (zapiszFormatCsv.IsChecked == false && zapiszFormatXml.IsChecked == false)
             {
                 MessageBox.Show("Wybierz jakiś format pliku.", "Błąd");
                 return;
@@ -499,13 +500,13 @@ namespace KursyWalutNBP
                 if (!Directory.Exists(sciezka))
                     Directory.CreateDirectory(sciezka);
                 // jeśli wybrano liste aktulnych kursów do zapisu, to:
-                if (zapiszListaAktualneCB.IsEnabled)
+                if (zapiszListaAktualneCB.IsChecked == true)
                 {
-                    // jeśli wybrany format to Plik tekstowy .txt, to:
-                    if (zapiszFormatTxt.IsEnabled)
+                    // jeśli wybrany format to .csv, to:
+                    if (zapiszFormatCsv.IsChecked == true)
                     {
                         // zapisz ścieżkę do pliku w obiekcie file
-                        string file = sciezka + "\\" + zapiszNazwaPliku.Text + ".txt";
+                        string file = sciezka + "\\" + zapiszNazwaPliku.Text + ".csv";
                         // otwórz plik, a jeśli nie istnieje, to go utwórz
                         // z prawami do zapisu
                         FileStream fs = new FileStream(file, FileMode.OpenOrCreate, FileAccess.Write);
@@ -514,25 +515,120 @@ namespace KursyWalutNBP
                         // poniższe dwie instrukcje czyszczą zawartość pliku
                         fs.SetLength(0);
                         fs.Flush();
+                        sw.WriteLine("Waluta,Przelicznik,Kod,Kurs średni,Kurs kupna, Kurs sprzedaży");
                         // poniższa pętla zapisuje dane z listy wybranych,
-                        // aktualnych kursów walut do pliku .txt
-                        foreach (Waluta item in listBox.Items)
+                        // aktualnych kursów walut do pliku .csv
+                        foreach (Waluta waluta in listBox.Items)
                         {
-                            // zapisz do pliku listę
-                            sw.WriteLine(item.Nazwa + "," + item.Kraj + ","
-                                        + item.Przelicznik + "," + item.Kod
-                                        + "," + item.KursSredni + ","
-                                        + item.KursKupna + "," + item.KursSprzedazy);
+                            sw.WriteLine(waluta.Nazwa + ","
+                                        + waluta.Przelicznik + "," + waluta.Kod
+                                        + "," + waluta.KursSredni + ","
+                                        + waluta.KursKupna + "," + waluta.KursSprzedazy);
                         }
                         // zamykanie strumienia oraz pliku
                         sw.Close();
                         fs.Close();
                     }
+                    // jeśli wybrany format to Dokument XML .xml, to:
+                    if (zapiszFormatXml.IsChecked == true)
+                    {
+                        // zapisz ścieżkę do pliku w obiekcie file
+                        string file = sciezka + "\\" + zapiszNazwaPliku.Text + ".xml";
+                        // tworzenie pliku .xml
+                        using (XmlWriter writer = XmlWriter.Create(file))
+                        {
+                            // przechowanie ustawień dot. formatu danych,
+                            // jakie istnieją w Polsce, w obiekcie polska
+                            CultureInfo polska = new CultureInfo("pl-PL");
+                            // poniższe instrukcje zapisują dane do pliku .xml
+                            writer.WriteStartDocument();
+                            writer.WriteStartElement("waluty_lista_aktualna");
+                            writer.WriteElementString("data_zapisu", DateTime.Now.ToString(polska));
+                            foreach (Waluta waluta in listBox.Items)
+                            {
+                                writer.WriteStartElement("pozycja");
+                                writer.WriteElementString("nazwa_waluty", waluta.Nazwa);
+                                writer.WriteElementString("przelicznik", waluta.Przelicznik.ToString());
+                                writer.WriteElementString("kod_waluty", waluta.Kod);
+                                writer.WriteElementString("kurs_sredni", waluta.KursSredni.ToString(polska));
+                                writer.WriteElementString("kurs_kupna", waluta.KursKupna.ToString(polska));
+                                writer.WriteElementString("kurs_sprzedazy", waluta.KursSprzedazy.ToString(polska));
+                                writer.WriteEndElement();
+                            }
+                            writer.WriteEndElement();
+                            writer.WriteEndDocument();
+                        }
+                    }
                 }
+                // jeśli wybrano liste archiwalnych kursów do zapisu, to:
+                if (zapiszListaArchCB.IsChecked == true)
+                {
+                    // jeśli wybrany format to .csv, to:
+                    if (zapiszFormatCsv.IsChecked == true)
+                    {
+                        // zapisz ścieżkę do pliku w obiekcie file
+                        string file = sciezka + "\\" + zapiszNazwaPliku.Text + "Arch.csv";
+                        // otwórz plik, a jeśli nie istnieje, to go utwórz
+                        // z prawami do zapisu
+                        FileStream fs = new FileStream(file, FileMode.OpenOrCreate, FileAccess.Write);
+                        // otwórz strumień do zapisu do pliku
+                        StreamWriter sw = new StreamWriter(fs);
+                        // poniższe dwie instrukcje czyszczą plik
+                        fs.SetLength(0);
+                        fs.Flush();
+                        sw.WriteLine("Dzień,Waluta,Kraj,Przelicznik,Kod,Kurs średni,Kurs kupna,Kurs sprzedaży");
+                        // poniższa pętla zapisuje dane z listy wybranych,
+                        // archiwalnych kursów walut do pliku .csv
+                        foreach (Waluta waluta in listaWalutArch.Items)
+                        {
+                            sw.WriteLine(waluta.Dzien + ","
+                                        + waluta.Nazwa + "," + waluta.Kraj + ","
+                                        + waluta.Przelicznik + "," + waluta.Kod
+                                        + "," + waluta.KursSredni + ","
+                                        + waluta.KursKupna + "," + waluta.KursSprzedazy);
+                        }
+                        // zamykanie strumienia oraz pliku
+                        sw.Close();
+                        fs.Close();
+                    }
+                    // jeśli wybrany format to Dokument XML .xml, to:
+                    if (zapiszFormatXml.IsChecked == true)
+                    {
+                        // zapisz ścieżkę do pliku w obiekcie file
+                        string file = sciezka + "\\" + zapiszNazwaPliku.Text + "Arch.xml";
+                        // tworzenie pliku .xml
+                        using (XmlWriter writer = XmlWriter.Create(file))
+                        {
+                            // przechowanie ustawień dot. formatu danych,
+                            // jakie istnieją w Polsce, w obiekcie polska
+                            CultureInfo polska = new CultureInfo("pl-PL");
+                            // poniższe instrukcje zapisują dane do pliku .xml
+                            writer.WriteStartDocument();
+                            writer.WriteStartElement("waluty_lista_archiwalna");
+                            writer.WriteElementString("data_zapisu", DateTime.Now.ToString(polska));
+                            foreach (Waluta waluta in listaWalutArch.Items)
+                            {
+                                writer.WriteStartElement("pozycja");
+                                writer.WriteElementString("dzien", waluta.Dzien);
+                                writer.WriteElementString("nazwa_waluty", waluta.Nazwa);
+                                writer.WriteElementString("kraj", waluta.Kraj);
+                                writer.WriteElementString("przelicznik", waluta.Przelicznik.ToString());
+                                writer.WriteElementString("kod_waluty", waluta.Kod);
+                                writer.WriteElementString("kurs_sredni", waluta.KursSredni.ToString(polska));
+                                writer.WriteElementString("kurs_kupna", waluta.KursKupna.ToString(polska));
+                                writer.WriteElementString("kurs_sprzedazy", waluta.KursSprzedazy.ToString(polska));
+                                writer.WriteEndElement();
+                            }
+                            writer.WriteEndElement();
+                            writer.WriteEndDocument();
+                        }
+                    }
+                }
+                MessageBox.Show("Operacja zapisu przebiegła pomyślnie.", "Zapisz");
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString(), "Błąd");
+                MessageBox.Show(ex.Message, "Błąd");
             }
         }
     }

@@ -55,7 +55,7 @@ namespace KursyWalutNBP
                     _lista[i].Nazwa = xmlNode.InnerText;
                 xmlNode = doc.GetElementsByTagName("przelicznik").Item(i);
                 if (xmlNode != null)
-                    _lista[i].Przelicznik = Convert.ToDouble(xmlNode.InnerText);
+                    _lista[i].Przelicznik = Convert.ToInt32(xmlNode.InnerText);
                 xmlNode = doc.GetElementsByTagName("kod_waluty").Item(i);
                 if (xmlNode != null)
                     _lista[i].Kod = xmlNode.InnerText;
@@ -63,7 +63,6 @@ namespace KursyWalutNBP
                 if (xmlNode != null)
                     _lista[i].Kraj = xmlNode.InnerText;
                 
-
                 if (kursSredni)
                 {
                     xmlNode = doc.GetElementsByTagName("kurs_sredni").Item(i);

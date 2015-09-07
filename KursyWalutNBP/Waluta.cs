@@ -9,7 +9,7 @@ namespace KursyWalutNBP
     class Waluta
     {
         public string Nazwa { get; set; }           // nazwa waluty
-        public double Przelicznik { get; set; }     // przelicznik
+        public int Przelicznik { get; set; }     // przelicznik
         public string Kod { get; set; }             // kod, np. PLN, USD, itp. itd.
         public double KursSredni { get; set; }      // kurs średni
         public double KursKupna { get; set; }       // kurs kupna
@@ -29,7 +29,7 @@ namespace KursyWalutNBP
         // 2. arg - przelicznik - przelicznik waluty
         // 3. arg - kod - kod waluty, np. PLN, EUR, itp. itd.
         // 4. arg - kurs - kurs średni waluty
-        public Waluta(string nazwa, double przelicznik, string kod, double kurs)
+        public Waluta(string nazwa, int przelicznik, string kod, double kurs)
         {
             Nazwa = nazwa;
             Przelicznik = przelicznik;
@@ -43,7 +43,7 @@ namespace KursyWalutNBP
         // 3. arg - kod - kod waluty, np. PLN, EUR, itp. itd.
         // 4. arg - kursKupna - kurs kupna waluty
         // 5. arg - kursSprzedazy - kurs sprzedaży waluty
-        public Waluta(string nazwa, double przelicznik, string kod, double kursKupna, double kursSprzedazy)
+        public Waluta(string nazwa, int przelicznik, string kod, double kursKupna, double kursSprzedazy)
         {
             Nazwa = nazwa;
             Przelicznik = przelicznik;

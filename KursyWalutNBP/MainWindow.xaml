@@ -112,9 +112,8 @@
             <CheckBox x:Name="zapiszListaAktualneCB" Content="Lista - aktualne" HorizontalAlignment="Left" Margin="30,36,0,0" VerticalAlignment="Top" IsChecked="True"/>
             <CheckBox x:Name="zapiszListaArchCB" Content="Lista - archiwum" HorizontalAlignment="Left" Margin="30,57,0,0" VerticalAlignment="Top" IsChecked="True"/>
             <Label Content="Jaki format?" HorizontalAlignment="Left" Margin="10,78,0,0" VerticalAlignment="Top"/>
-            <CheckBox x:Name="zapiszFormatTxt" Content="Plik tekstowy .txt" HorizontalAlignment="Left" Margin="30,104,0,0" VerticalAlignment="Top" IsChecked="True"/>
+            <CheckBox x:Name="zapiszFormatCsv" Content="Plik &quot;comma-separated values&quot; .csv" HorizontalAlignment="Left" Margin="30,104,0,0" VerticalAlignment="Top" IsChecked="True"/>
             <CheckBox x:Name="zapiszFormatXml" Content="Dokument XML .xml" HorizontalAlignment="Left" Margin="30,125,0,0" VerticalAlignment="Top" IsChecked="True"/>
-            <CheckBox x:Name="zapiszFormatXls" Content="Arkusz kalkulacyjny .xls" HorizontalAlignment="Left" Margin="30,146,0,0" VerticalAlignment="Top" IsChecked="True"/>
             <Label Content="Gdzie zapisać?" HorizontalAlignment="Left" Margin="10,185,0,0" VerticalAlignment="Top"/>
             <TextBox x:Name="zapiszSciezka" HorizontalAlignment="Left" Height="23" Margin="102,187,0,0" TextWrapping="Wrap" Text="C:\KursyWalut" VerticalAlignment="Top" Width="245"/>
             <Button x:Name="zapiszWybierzFolder" Content="Wybierz folder..." HorizontalAlignment="Left" Margin="352,187,0,0" VerticalAlignment="Top" Width="100" Click="zapiszWybierzFolder_Click"/>
