@@ -7,14 +7,14 @@ namespace KursyWalutNBP
     /// <summary>
     /// Interaction logic for TabelaAB.xaml
     /// </summary>
-    public partial class TabelaAbc : Window
+    public partial class TabelaAbcWindow : Window
     {
-        public TabelaAbc()
+        public TabelaAbcWindow()
         {
             InitializeComponent();
         }
 
-        public TabelaAbc(WalutyXML tabela)
+        public TabelaAbcWindow(WalutyXML tabela)
         {
             InitializeComponent();
             if (tabela.Nazwa == "Tabela C")

@@ -59,14 +59,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="OProgramieWindow.xaml.cs">
+      <DependentUpon>OProgramieWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="PobieranieWindow.xaml.cs">
       <DependentUpon>PobieranieWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="SortujWindow.xaml.cs">
       <DependentUpon>SortujWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TabelaAbc.xaml.cs">
-      <DependentUpon>TabelaAbc.xaml</DependentUpon>
+    <Compile Include="TabelaAbcWindow.xaml.cs">
+      <DependentUpon>TabelaAbcWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Waluta.cs" />
     <Compile Include="WalutyXML.cs" />
@@ -82,6 +85,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="OProgramieWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="PobieranieWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -90,7 +97,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="TabelaAbc.xaml">
+    <Page Include="TabelaAbcWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

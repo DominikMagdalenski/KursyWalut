@@ -219,9 +219,12 @@ namespace KursyWalutNBP
             try
             {
                 // indeksy: 0 - tabelaA, 1 - tabelaB, 2 - tabelaC
+                // jeśli nie pobrano wcześniej tabeli, to pobierz ją teraz
                 WalutyXML tab = _tabele.Count != 3 ? new WalutyXML("http://www.nbp.pl/kursy/xml/LastA.xml", "Tabela A", true) : _tabele[0];
                 string dzien = DateTime.Today.Day + "." + DateTime.Today.Month + "." + DateTime.Today.Year;
-                TabelaAbc tabelaA = new TabelaAbc(tab) {Title = "Tabela A " + dzien};
+                // tworzenie nowego okna dla tabeli
+                TabelaAbcWindow tabelaA = new TabelaAbcWindow(tab) {Title = "Tabela A " + dzien};
+                // wyświetlenie okna
                 tabelaA.Show();
             }
             catch (Exception ex)
@@ -235,9 +238,12 @@ namespace KursyWalutNBP
             try
             {
                 // indeksy: 0 - tabelaA, 1 - tabelaB, 2 - tabelaC
+                // jeśli nie pobrano wcześniej tabeli, to pobierz ją teraz
                 WalutyXML tab = _tabele.Count != 3 ? new WalutyXML("http://www.nbp.pl/kursy/xml/LastB.xml", "Tabela B", true) : _tabele[1];
                 string dzien = DateTime.Today.Day + "." + DateTime.Today.Month + "." + DateTime.Today.Year;
-                TabelaAbc tabelaB = new TabelaAbc(tab) { Title = "Tabela B " + dzien };
+                // tworzenie nowego okna dla tabeli
+                TabelaAbcWindow tabelaB = new TabelaAbcWindow(tab) { Title = "Tabela B " + dzien };
+                // wyświetlenie okna
                 tabelaB.Show();
             }
             catch (Exception ex)
@@ -251,9 +257,12 @@ namespace KursyWalutNBP
             try
             {
                 // indeksy: 0 - tabelaA, 1 - tabelaB, 2 - tabelaC
+                // jeśli nie pobrano wcześniej tabeli, to pobierz ją teraz
                 WalutyXML tab = _tabele.Count != 3 ? new WalutyXML("http://www.nbp.pl/kursy/xml/LastB.xml", "Tabela C", true) : _tabele[2];
                 string dzien = DateTime.Today.Day + "." + DateTime.Today.Month + "." + DateTime.Today.Year;
-                TabelaAbc tabelaC = new TabelaAbc(tab) { Title = "Tabela C " + dzien };
+                // tworzenie nowego okna dla tabeli
+                TabelaAbcWindow tabelaC = new TabelaAbcWindow(tab) { Title = "Tabela C " + dzien };
+                // wyświetlenie okna
                 tabelaC.Show();
             }
             catch (Exception ex)
@@ -264,7 +273,16 @@ namespace KursyWalutNBP
 
         private void Wyczysc_Click(object sender, RoutedEventArgs e)
         {
-
+            // Jeśli użytkownik pracuje w trybie aktualnych kursów,
+            // i wybierze opcje "Wyczyść listę", to zdarzenie wyczyści
+            // listę wybranych, aktualnych kursów walut.
+            // A jeżeli użytkownik pracuje w trybie archiwalnych kursów,
+            // to po wybraniu opcji "Wyczyść listę", zdarzenie wyczyści
+            // listę wybranych, archiwalnych kursów walut.
+            if (Equals(_wLista, listaWalutAkt))
+                listaWalutAkt.Items.Clear();
+            else if(Equals(_wLista, listaWalutArch))
+                listaWalutArch.Items.Clear();
         }
 
         private void WykresLista_Click(object sender, RoutedEventArgs e)
@@ -299,12 +317,13 @@ namespace KursyWalutNBP
 
         private void OProgramie_Click(object sender, RoutedEventArgs e)
         {
-
+            OProgramieWindow oProgramieWindow = new OProgramieWindow();
+            oProgramieWindow.Show();
         }
 
         private void StronaNBP_Click(object sender, RoutedEventArgs e)
         {
-
+            System.Diagnostics.Process.Start("http://www.nbp.pl/");
         }
 
         private void Autorzy_Click(object sender, RoutedEventArgs e)
