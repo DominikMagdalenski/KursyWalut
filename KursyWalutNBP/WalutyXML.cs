@@ -12,7 +12,7 @@ using System.Xml;
 
 namespace KursyWalutNBP
 {
-    class WalutyXML
+    public class WalutyXML
     {
         public string Nazwa { get; set; }           // nazwa tabeli
         public Boolean KursSredni { get; set; }     // czy uwzgledniany jest tylko kurs średni?

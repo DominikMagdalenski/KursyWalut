@@ -6,7 +6,7 @@
 
 namespace KursyWalutNBP
 {
-    class Waluta
+    public class Waluta
     {
         public string Nazwa { get; set; }           // nazwa waluty
         public int Przelicznik { get; set; }     // przelicznik

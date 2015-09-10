@@ -16,7 +16,7 @@
                 <MenuItem Header="Zapisz..." Click="Zapisz_Click"></MenuItem>
             </MenuItem>
             <MenuItem Header="Edycja">
-                <MenuItem Header="Sortuj listę..." Click="Sortuj_Click"></MenuItem>
+                <MenuItem Header="Sortuj listę..." Click="Sortuj_Click" IsEnabled="False"></MenuItem>
                 <MenuItem Header="Wyświetl tabelę">
                     <MenuItem Header="Tabela A" Click="WyswietlA_Click"></MenuItem>
                     <MenuItem Header="Tabela B" Click="WyswietlB_Click"></MenuItem>
@@ -58,7 +58,7 @@
             <Label Content="Wybierz tabelę" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="273" HorizontalAlignment="Center" Grid.Row="0" VerticalAlignment="Center" Margin="0,0,0,30"/>
             <Label Content="Wybierz walutę" Grid.Column="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" Width="273" Grid.Row="0" VerticalAlignment="Center" Margin="0,0,0,30"/>
 
-            <ListView x:Name="listBox" Grid.ColumnSpan="2" Grid.Row="1" Margin="10,0,10,10">
+            <ListView x:Name="listaWalutAkt" Grid.ColumnSpan="2" Grid.Row="1" Margin="10,0,10,10">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Waluta" Width="260" DisplayMemberBinding="{Binding Nazwa}"></GridViewColumn>

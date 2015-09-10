@@ -62,6 +62,12 @@
     <Compile Include="PobieranieWindow.xaml.cs">
       <DependentUpon>PobieranieWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SortujWindow.xaml.cs">
+      <DependentUpon>SortujWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TabelaAbc.xaml.cs">
+      <DependentUpon>TabelaAbc.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Waluta.cs" />
     <Compile Include="WalutyXML.cs" />
     <Page Include="MainWindow.xaml">
@@ -77,6 +83,14 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="PobieranieWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SortujWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TabelaAbc.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

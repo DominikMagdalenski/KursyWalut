@@ -39,6 +39,7 @@ namespace KursyWalutNBP
 
         // lista walut, nad którą aktualnie użytkownik pracuje
         private ListBox _wLista;
+        public ListBox WLista { get { return _wLista; } }
 
         public MainWindow()
         {
@@ -49,7 +50,7 @@ namespace KursyWalutNBP
         private void Inicjalizacja()
         {
             // przechowywanie w _wLista referencji do listy z którą aktualnie pracujemy
-            _wLista = listBox;
+            _wLista = listaWalutAkt;
 
             try
             {
@@ -147,7 +148,7 @@ namespace KursyWalutNBP
             try
             {
                 if (index > -1)
-                    listBox.Items.Add(_tabele[wyborTabeli.SelectedIndex].Lista[index]);
+                    listaWalutAkt.Items.Add(_tabele[wyborTabeli.SelectedIndex].Lista[index]);
             }
             catch (Exception ex)
             {
@@ -186,7 +187,7 @@ namespace KursyWalutNBP
 
         private void Aktualne_Click(object sender, RoutedEventArgs e)
         {
-            _wLista = listBox;
+            _wLista = listaWalutAkt;
             AktualneGrid.Visibility = Visibility.Visible;
             ArchiwumGrid.Visibility = Visibility.Hidden;
             ZapiszGrid.Visibility = Visibility.Hidden;
@@ -209,22 +210,56 @@ namespace KursyWalutNBP
 
         private void Sortuj_Click(object sender, RoutedEventArgs e)
         {
-
+            SortujWindow sortujWindow = new SortujWindow(this);
+            sortujWindow.Show();
         }
 
         private void WyswietlA_Click(object sender, RoutedEventArgs e)
         {
-
+            try
+            {
+                // indeksy: 0 - tabelaA, 1 - tabelaB, 2 - tabelaC
+                WalutyXML tab = _tabele.Count != 3 ? new WalutyXML("http://www.nbp.pl/kursy/xml/LastA.xml", "Tabela A", true) : _tabele[0];
+                string dzien = DateTime.Today.Day + "." + DateTime.Today.Month + "." + DateTime.Today.Year;
+                TabelaAbc tabelaA = new TabelaAbc(tab) {Title = "Tabela A " + dzien};
+                tabelaA.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "Błąd");
+            }
         }
 
         private void WyswietlB_Click(object sender, RoutedEventArgs e)
         {
-
+            try
+            {
+                // indeksy: 0 - tabelaA, 1 - tabelaB, 2 - tabelaC
+                WalutyXML tab = _tabele.Count != 3 ? new WalutyXML("http://www.nbp.pl/kursy/xml/LastB.xml", "Tabela B", true) : _tabele[1];
+                string dzien = DateTime.Today.Day + "." + DateTime.Today.Month + "." + DateTime.Today.Year;
+                TabelaAbc tabelaB = new TabelaAbc(tab) { Title = "Tabela B " + dzien };
+                tabelaB.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "Błąd");
+            }
         }
 
         private void WyswietlC_Click(object sender, RoutedEventArgs e)
         {
-
+            try
+            {
+                // indeksy: 0 - tabelaA, 1 - tabelaB, 2 - tabelaC
+                WalutyXML tab = _tabele.Count != 3 ? new WalutyXML("http://www.nbp.pl/kursy/xml/LastB.xml", "Tabela C", true) : _tabele[2];
+                string dzien = DateTime.Today.Day + "." + DateTime.Today.Month + "." + DateTime.Today.Year;
+                TabelaAbc tabelaC = new TabelaAbc(tab) { Title = "Tabela C " + dzien };
+                tabelaC.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "Błąd");
+            }
         }
 
         private void Wyczysc_Click(object sender, RoutedEventArgs e)
@@ -378,12 +413,12 @@ namespace KursyWalutNBP
                     if (Convert.ToInt32(wyborDniaArch.SelectedItem) == dzien)
                     {
                         if (t[0] == 'a')
-                            _tabeleArch.Add(new WalutyXML("http://www.nbp.pl/kursy/xml/" + t + ".xml", "Tabela A", true));
+                        _tabeleArch.Add(new WalutyXML("http://www.nbp.pl/kursy/xml/" + t + ".xml", "Tabela A", true));
                         else if (t[0] == 'b')
-                            _tabeleArch.Add(new WalutyXML("http://www.nbp.pl/kursy/xml/" + t + ".xml", "Tabela B", true));
+                        _tabeleArch.Add(new WalutyXML("http://www.nbp.pl/kursy/xml/" + t + ".xml", "Tabela B", true));
                         else if (t[0] == 'c')
-                            _tabeleArch.Add(new WalutyXML("http://www.nbp.pl/kursy/xml/" + t + ".xml", "Tabela C", false));
-                    }
+                        _tabeleArch.Add(new WalutyXML("http://www.nbp.pl/kursy/xml/" + t + ".xml", "Tabela C", false));
+                        }
                     else if (Convert.ToInt32(wyborDniaArch.SelectedItem) < dzien)
                         break;
                 }
@@ -518,7 +553,7 @@ namespace KursyWalutNBP
                         sw.WriteLine("Waluta,Przelicznik,Kod,Kurs średni,Kurs kupna, Kurs sprzedaży");
                         // poniższa pętla zapisuje dane z listy wybranych,
                         // aktualnych kursów walut do pliku .csv
-                        foreach (Waluta waluta in listBox.Items)
+                        foreach (Waluta waluta in listaWalutAkt.Items)
                         {
                             sw.WriteLine(waluta.Nazwa + ","
                                         + waluta.Przelicznik + "," + waluta.Kod
@@ -544,7 +579,7 @@ namespace KursyWalutNBP
                             writer.WriteStartDocument();
                             writer.WriteStartElement("waluty_lista_aktualna");
                             writer.WriteElementString("data_zapisu", DateTime.Now.ToString(polska));
-                            foreach (Waluta waluta in listBox.Items)
+                            foreach (Waluta waluta in listaWalutAkt.Items)
                             {
                                 writer.WriteStartElement("pozycja");
                                 writer.WriteElementString("nazwa_waluty", waluta.Nazwa);
