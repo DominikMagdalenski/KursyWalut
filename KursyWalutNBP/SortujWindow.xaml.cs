@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows;
-using System.Windows.Data;
 
 namespace KursyWalutNBP
 {
@@ -12,9 +10,8 @@ namespace KursyWalutNBP
     /// </summary>
     public partial class SortujWindow : Window
     {
-        // referencja do głównego okna aplikacji
-        private readonly MainWindow _mainWindow;
         private readonly bool _arch;
+        private readonly System.Windows.Controls.ListView _listView;
 
         public SortujWindow()
         {
@@ -25,8 +22,10 @@ namespace KursyWalutNBP
         public SortujWindow(MainWindow mainWindowArg)
         {
             InitializeComponent();
-            _mainWindow = mainWindowArg;
-            _arch = Equals(_mainWindow.WLista, _mainWindow.listaWalutArch);
+            // referencja do głównego okna aplikacji
+            MainWindow mainWindow = mainWindowArg;
+            _arch = Equals(mainWindow.WLista, mainWindow.listaWalutArch);
+            _listView = _arch ? mainWindow.listaWalutArch : mainWindow.listaWalutAkt;
             wypelnijSortCB();
         }
 
@@ -46,22 +45,49 @@ namespace KursyWalutNBP
 
         private void sortujButton_Click(object sender, RoutedEventArgs e)
         {
-            /*if (sortujCB.SelectedIndex > -1)
+            try
             {
-                if (!_arch)
+                List<Waluta> lista = _listView.Items.Cast<Waluta>().ToList();
+                switch (sortujCB.SelectedItem.ToString())
                 {
-                    CollectionView view =
-                        (CollectionView) CollectionViewSource.GetDefaultView(_mainWindow.listaWalutAkt);
-                    view.SortDescriptions.Add(new SortDescription(sortujCB.SelectedItem.ToString(), ListSortDirection.Ascending));
+                    case "Dzień":
+                        lista.Sort((x, y) => String.CompareOrdinal(x.Dzien, y.Dzien));
+                        break;
+                    case "Waluta":
+                        lista.Sort((x, y) => String.CompareOrdinal(x.Nazwa, y.Nazwa));
+                        break;
+                    case "Kraj":
+                        lista.Sort((x, y) => String.CompareOrdinal(x.Kraj, y.Kraj));
+                        break;
+                    case "Przelicznik":
+                        lista.Sort((x, y) => String.CompareOrdinal(x.Przelicznik.ToString(), y.Przelicznik.ToString()));
+                        break;
+                    case "Kod":
+                        lista.Sort((x, y) => String.CompareOrdinal(x.Kod, y.Kod));
+                        break;
+                    case "średni":
+                        lista.Sort((x, y) => String.CompareOrdinal(x.KursSredni.ToString(), y.KursSredni.ToString()));
+                        break;
+                    case "kupno":
+                        lista.Sort((x, y) => String.CompareOrdinal(x.KursKupna.ToString(), y.KursKupna.ToString()));
+                        break;
+                    case "sprzedaż":
+                        lista.Sort((x, y) => String.CompareOrdinal(x.KursSprzedazy.ToString(), y.KursSprzedazy.ToString()));
+                        break;
+                    default:
+                        lista.Sort((x, y) => String.CompareOrdinal(x.Nazwa, y.Nazwa));
+                        break;
                 }
-                else
+                _listView.Items.Clear();
+                foreach (Waluta waluta in lista)
                 {
-                    CollectionView view =
-                        (CollectionView)CollectionViewSource.GetDefaultView(_mainWindow.listaWalutArch);
-                    view.SortDescriptions.Add(new SortDescription(sortujCB.SelectedItem.ToString(), ListSortDirection.Ascending));
+                    _listView.Items.Add(waluta);
                 }
-                Close();
-            }*/
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "Błąd");
+            }
         }
     }
 }

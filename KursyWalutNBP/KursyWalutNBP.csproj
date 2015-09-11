@@ -59,6 +59,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AutorzyWindow.xaml.cs">
+      <DependentUpon>AutorzyWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="OProgramieWindow.xaml.cs">
       <DependentUpon>OProgramieWindow.xaml</DependentUpon>
     </Compile>
@@ -73,6 +76,10 @@
     </Compile>
     <Compile Include="Waluta.cs" />
     <Compile Include="WalutyXML.cs" />
+    <Page Include="AutorzyWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -211,6 +211,10 @@ namespace KursyWalutNBP
         private void Sortuj_Click(object sender, RoutedEventArgs e)
         {
             SortujWindow sortujWindow = new SortujWindow(this);
+            if (Equals(_wLista, listaWalutAkt))
+                sortujWindow.Title += " - aktualne";
+            else
+                sortujWindow.Title += " - archiwum";
             sortujWindow.Show();
         }
 
@@ -328,7 +332,8 @@ namespace KursyWalutNBP
 
         private void Autorzy_Click(object sender, RoutedEventArgs e)
         {
-
+            AutorzyWindow autorzyWindow = new AutorzyWindow();
+            autorzyWindow.Show();
         }
 
         private void wyborRokuArch_SelectionChanged(object sender, SelectionChangedEventArgs e)

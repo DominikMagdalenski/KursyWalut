@@ -16,7 +16,7 @@
                 <MenuItem Header="Zapisz..." Click="Zapisz_Click"></MenuItem>
             </MenuItem>
             <MenuItem Header="Edycja">
-                <MenuItem Header="Sortuj listę..." Click="Sortuj_Click" IsEnabled="False"></MenuItem>
+                <MenuItem Header="Sortuj listę..." Click="Sortuj_Click"></MenuItem>
                 <MenuItem Header="Wyświetl tabelę">
                     <MenuItem Header="Tabela A" Click="WyswietlA_Click"></MenuItem>
                     <MenuItem Header="Tabela B" Click="WyswietlB_Click"></MenuItem>
