@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Xml;
 
 namespace KursyWalutNBP
@@ -78,18 +79,20 @@ namespace KursyWalutNBP
                     xmlNode = doc.GetElementsByTagName("kurs_sredni").Item(i);
                     if (xmlNode != null)
                         _lista[i].KursSredni =
-                            Convert.ToDouble(xmlNode.InnerText.Replace(',', '.'));
+                            double.Parse(xmlNode.InnerText, CultureInfo.GetCultureInfo("pl-PL"));
+                    //Double.Parse(xmlNode.InnerText.Replace(',', '.'));
+                    // Convert.ToDouble
                 }
                 else
                 {
                     xmlNode = doc.GetElementsByTagName("kurs_kupna").Item(i);
                     if (xmlNode != null)
                         _lista[i].KursKupna =
-                            Convert.ToDouble(xmlNode.InnerText.Replace(',', '.'));
+                            double.Parse(xmlNode.InnerText, CultureInfo.GetCultureInfo("pl-PL"));
                     xmlNode = doc.GetElementsByTagName("kurs_sprzedazy").Item(i);
                     if (xmlNode != null)
                         _lista[i].KursSprzedazy =
-                            Convert.ToDouble(xmlNode.InnerText.Replace(',', '.'));
+                            double.Parse(xmlNode.InnerText, CultureInfo.GetCultureInfo("pl-PL"));
                 }
             }
         }
