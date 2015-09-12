@@ -644,8 +644,8 @@ namespace KursyWalutNBP
             // ustawianie stringu 'miesiac' w zależności od wybranego miesiąca
             // 01, 02,..., 09, 10, 11, 12
             string miesiac = (wyborMiesiacaArch.SelectedIndex + 1) > 9
-                ? wyborMiesiacaArch.SelectedIndex.ToString()
-                : "0" + wyborMiesiacaArch.SelectedIndex;
+                ? (wyborMiesiacaArch.SelectedIndex+1).ToString()
+                : "0" + (wyborMiesiacaArch.SelectedIndex+1);
 
             int i = wyborWalutyArch.SelectedIndex;
             
