@@ -1,5 +1,5 @@
 # KursyWalutNBP
-Jak sama nazwa wskazuje, program pobiera i wyswietla aktualne kursy walut z oficjalnej strony NBP.
+Jak sama nazwa wskazuje, program dotyczy kursów walut NBP. Za jego pomoca można w krótkim czasie pobrać, przeanalizować oraz zapisać do pliku CSV lub XML, aktualne lub archiwalne kursy walut.
 
 ## TODO:
 * Zaprojektować nowy interfejs (v2.0.0)
