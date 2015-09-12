@@ -14,7 +14,7 @@ namespace KursyWalutNBP
             InitializeComponent();
         }
 
-        public TabelaAbcWindow(WalutyXML tabela)
+        public TabelaAbcWindow(WalutyXml tabela)
         {
             InitializeComponent();
             if (tabela.Nazwa == "Tabela C")

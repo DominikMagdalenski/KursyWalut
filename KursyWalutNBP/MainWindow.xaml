@@ -24,7 +24,7 @@
                 </MenuItem>
                 <MenuItem Header="Wyczyść listę" Click="Wyczysc_Click"></MenuItem>
             </MenuItem>
-            <MenuItem Header="Wykres">
+            <!--<MenuItem Header="Wykres" IsEnabled="False">
                 <MenuItem Header="z listy wybranych walut..." Click="WykresLista_Click"></MenuItem>
                 <MenuItem Header="z tabeli">
                     <MenuItem Header="Tabela A" Click="WykresA_Click"></MenuItem>
@@ -32,10 +32,10 @@
                     <MenuItem Header="Tabela C" Click="WykresC_Click"></MenuItem>
                 </MenuItem>
                 <MenuItem Header="zmian kursu waluty..." Click="WykresZmian_Click"></MenuItem>
-            </MenuItem>
+            </MenuItem>-->
             <MenuItem Header="Pomoc">
-                <MenuItem Header="Pomoc" Click="Pomoc_Click"></MenuItem>
-                <Separator></Separator>
+                <!--<MenuItem Header="Pomoc" Click="Pomoc_Click" IsEnabled="False"></MenuItem>
+                <Separator></Separator>-->
                 <MenuItem Header="O programie" Click="OProgramie_Click"></MenuItem>
                 <MenuItem Header="Strona NBP" Click="StronaNBP_Click"></MenuItem>
                 <Separator></Separator>

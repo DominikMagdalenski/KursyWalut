@@ -29,8 +29,8 @@ namespace KursyWalutNBP
     public partial class MainWindow : Window
     {
         // Tworzenie listy tabel kursów walut
-        private readonly List<WalutyXML> _tabele = new List<WalutyXML>();
-        private readonly List<WalutyXML> _tabeleArch = new List<WalutyXML>();
+        private readonly List<WalutyXml> _tabele = new List<WalutyXml>();
+        private readonly List<WalutyXml> _tabeleArch = new List<WalutyXml>();
         private List<String> _dirArch = new List<string>();
         private readonly List<String> _listPlikowZMiesiaca = new List<string>();
 
@@ -41,12 +41,20 @@ namespace KursyWalutNBP
         private ListBox _wLista;
         public ListBox WLista { get { return _wLista; } }
 
+        /// <summary>
+        /// Konstruktor domyślny klasy MainWindow.
+        /// </summary>
         public MainWindow()
         {
             InitializeComponent();
             Inicjalizacja();
         }
 
+        /// <summary>
+        /// Metoda, którą powinna być wywoływana w konstruktorze MainWindow().
+        /// Inicjalizuje ona pole _wLista, które przechowuje referencję
+        /// do listy wybranych walut, z którą aktualnie pracuje użytkownik programu.
+        /// </summary>
         private void Inicjalizacja()
         {
             // przechowywanie w _wLista referencji do listy z którą aktualnie pracujemy
@@ -67,6 +75,12 @@ namespace KursyWalutNBP
             }
         }
 
+        /// <summary>
+        /// Inicjuje pobieranie aktualnych kursów walut z oficjalnej strony NBP.
+        /// Pobieranie jest uruchamiane asynchronicznie za pomocą klasy BackgroundWorker.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void pobierzAktualneKursy_Click(object sender, RoutedEventArgs e)
         {
             // Rozpoczęcie pobierania aktualnych kursów w tle
@@ -91,6 +105,11 @@ namespace KursyWalutNBP
             _bkgWorker.RunWorkerAsync();
         }
 
+        /// <summary>
+        /// Pobiera aktualne kursy walut z oficjalnej strony NBP.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void _bkgWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             try
@@ -99,12 +118,12 @@ namespace KursyWalutNBP
                 // 1. arg - adres URL
                 // 2. arg - nazwa Tabeli
                 // 3. arg - czy w dokumencie xml znajduje się kurs średni - true (czy kurs kupna/sprzedaży - false)?
-                _tabele.Add(new WalutyXML("http://www.nbp.pl/kursy/xml/LastA.xml", "Tabela A", true));
+                _tabele.Add(new WalutyXml("http://www.nbp.pl/kursy/xml/LastA.xml", "Tabela A", true));
                 // raportowanie progresu (wywołuje zdarzenie ProgressChanged)
                 _bkgWorker.ReportProgress(33);
-                _tabele.Add(new WalutyXML("http://www.nbp.pl/kursy/xml/LastB.xml", "Tabela B", true));
+                _tabele.Add(new WalutyXml("http://www.nbp.pl/kursy/xml/LastB.xml", "Tabela B", true));
                 _bkgWorker.ReportProgress(66);
-                _tabele.Add(new WalutyXML("http://www.nbp.pl/kursy/xml/LastC.xml", "Tabela C", false));
+                _tabele.Add(new WalutyXml("http://www.nbp.pl/kursy/xml/LastC.xml", "Tabela C", false));
                 _bkgWorker.ReportProgress(100);
             }
             catch (Exception ex)
@@ -113,9 +132,13 @@ namespace KursyWalutNBP
             }
         }
 
-        // zdarzenie wywoływane, kiedy _bkgWorker zakończy prace,
-        // czyli kiedy zostaną pobrane dokumenty XML
-        // z aktualnymi kursami walut
+        /// <summary>
+        /// Zdarzenie wywoływane, kiedy _bkgWorker zakończy prace,
+        /// czyli wtedy kiedy zostaną pobrane dokumenty XML
+        /// z aktualnymi kursami walut.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void _bkgWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             // zamyka okienko z progresem pobierania
@@ -124,7 +147,7 @@ namespace KursyWalutNBP
             try
             {
                 // Dodawanie tabel do comboBox'a 'wyborTabeli' z listy _tabele
-                foreach (WalutyXML tabela in _tabele)
+                foreach (WalutyXml tabela in _tabele)
                 {
                     wyborTabeli.Items.Add(tabela.Nazwa);
                 }
@@ -135,12 +158,24 @@ namespace KursyWalutNBP
             }
         }
 
+        /// <summary>
+        /// Zdarzenie raportuje o postępach pobierania aktualnych kursów walut.
+        /// Zmienia wartość _dwnlWindow.progressBar w zależności od postępów pobierania.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void _bkgWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             // aktualizuje progressBar w oknie _dwnlWindow
             _dwnlWindow.progresBarPobieranie.Value = e.ProgressPercentage;
         }
 
+        /// <summary>
+        /// Zdarzenie wywoływane, kiedy użytkownik wybierze inną walutę w ComboBox'ie.
+        /// Dodaje wybraną walutę do listy aktualnych, wybranych walut.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void wyborWaluty_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // index wybranej waluty
@@ -156,6 +191,12 @@ namespace KursyWalutNBP
             }
         }
 
+        /// <summary>
+        /// Zdarzenie wywoływane, kiedy użytkownik wybierze inną tabelę w ComboBox'ie.
+        /// Czyści ComboBox z wyborem waluty, a następnie go wypełnia odpowiednimi walutami.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void wyborTabeli_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             try
@@ -178,6 +219,12 @@ namespace KursyWalutNBP
             
         }
 
+        /// <summary>
+        /// Zdarzenie wywoływane, gdy zostanie naciśniety jakiś przycisk.
+        /// Obsłużony jest tylko przycisk ESCAPE, który kończy działanie programu.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
             // Wyjście z programu za pomocą klawisza ESCAPE
@@ -185,6 +232,12 @@ namespace KursyWalutNBP
                 Close();
         }
 
+        /// <summary>
+        /// Zdarzenie wywoływane po wybraniu opcji "Tryb->Kursy aktualne".
+        /// Przełącza na tryb "Kursy aktualne".
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Aktualne_Click(object sender, RoutedEventArgs e)
         {
             _wLista = listaWalutAkt;
@@ -193,6 +246,12 @@ namespace KursyWalutNBP
             ZapiszGrid.Visibility = Visibility.Hidden;
         }
 
+        /// <summary>
+        /// Zdarzenie wywoływane po wybraniu opcji "Tryb->Archiwum".
+        /// Przełącza na tryb "Archiwum".
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Archiwum_Click(object sender, RoutedEventArgs e)
         {
             _wLista = listaWalutArch;
@@ -201,6 +260,12 @@ namespace KursyWalutNBP
             ZapiszGrid.Visibility = Visibility.Hidden;
         }
 
+        /// <summary>
+        /// Zdarzenie wywoływane po wybraniu opcji "Tryb->Zapisz...".
+        /// Przełącza na tryb "Zapisz...".
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Zapisz_Click(object sender, RoutedEventArgs e)
         {
             AktualneGrid.Visibility = Visibility.Hidden;
@@ -208,6 +273,13 @@ namespace KursyWalutNBP
             ZapiszGrid.Visibility = Visibility.Visible;
         }
 
+        /// <summary>
+        /// Zdarzenie wywoływane po wybraniu opcji "Edycja->Sortuj...".
+        /// Uruchamia okienko, za pomocą którego można posortować
+        /// listę wybranych walut.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Sortuj_Click(object sender, RoutedEventArgs e)
         {
             SortujWindow sortujWindow = new SortujWindow(this);
@@ -218,13 +290,21 @@ namespace KursyWalutNBP
             sortujWindow.Show();
         }
 
+        /// <summary>
+        /// Zdarzenie wywoływane po wybraniu opcji "Edycja->Wyświetl tabelę->Tabela A".
+        /// Otwiera okienko z aktualnymi kursami walut dot. Tabeli A.
+        /// Jeśli tabela nie została wcześniej pobrana, to zdarzenie
+        /// automatycznie pobierze tabelę ze strony NBP.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void WyswietlA_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 // indeksy: 0 - tabelaA, 1 - tabelaB, 2 - tabelaC
                 // jeśli nie pobrano wcześniej tabeli, to pobierz ją teraz
-                WalutyXML tab = _tabele.Count != 3 ? new WalutyXML("http://www.nbp.pl/kursy/xml/LastA.xml", "Tabela A", true) : _tabele[0];
+                WalutyXml tab = _tabele.Count != 3 ? new WalutyXml("http://www.nbp.pl/kursy/xml/LastA.xml", "Tabela A", true) : _tabele[0];
                 string dzien = DateTime.Today.Day + "." + DateTime.Today.Month + "." + DateTime.Today.Year;
                 // tworzenie nowego okna dla tabeli
                 TabelaAbcWindow tabelaA = new TabelaAbcWindow(tab) {Title = "Tabela A " + dzien};
@@ -237,13 +317,21 @@ namespace KursyWalutNBP
             }
         }
 
+        /// <summary>
+        /// Zdarzenie wywoływane po wybraniu opcji "Edycja->Wyświetl tabelę->Tabela B".
+        /// Otwiera okienko z aktualnymi kursami walut dot. Tabeli B.
+        /// Jeśli tabela nie została wcześniej pobrana, to zdarzenie
+        /// automatycznie pobierze tabelę ze strony NBP.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void WyswietlB_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 // indeksy: 0 - tabelaA, 1 - tabelaB, 2 - tabelaC
                 // jeśli nie pobrano wcześniej tabeli, to pobierz ją teraz
-                WalutyXML tab = _tabele.Count != 3 ? new WalutyXML("http://www.nbp.pl/kursy/xml/LastB.xml", "Tabela B", true) : _tabele[1];
+                WalutyXml tab = _tabele.Count != 3 ? new WalutyXml("http://www.nbp.pl/kursy/xml/LastB.xml", "Tabela B", true) : _tabele[1];
                 string dzien = DateTime.Today.Day + "." + DateTime.Today.Month + "." + DateTime.Today.Year;
                 // tworzenie nowego okna dla tabeli
                 TabelaAbcWindow tabelaB = new TabelaAbcWindow(tab) { Title = "Tabela B " + dzien };
@@ -256,13 +344,21 @@ namespace KursyWalutNBP
             }
         }
 
+        /// <summary>
+        /// Zdarzenie wywoływane po wybraniu opcji "Edycja->Wyświetl tabelę->Tabela C".
+        /// Otwiera okienko z aktualnymi kursami walut dot. Tabeli C.
+        /// Jeśli tabela nie została wcześniej pobrana, to zdarzenie
+        /// automatycznie pobierze tabelę ze strony NBP.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void WyswietlC_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 // indeksy: 0 - tabelaA, 1 - tabelaB, 2 - tabelaC
                 // jeśli nie pobrano wcześniej tabeli, to pobierz ją teraz
-                WalutyXML tab = _tabele.Count != 3 ? new WalutyXML("http://www.nbp.pl/kursy/xml/LastB.xml", "Tabela C", true) : _tabele[2];
+                WalutyXml tab = _tabele.Count != 3 ? new WalutyXml("http://www.nbp.pl/kursy/xml/LastB.xml", "Tabela C", true) : _tabele[2];
                 string dzien = DateTime.Today.Day + "." + DateTime.Today.Month + "." + DateTime.Today.Year;
                 // tworzenie nowego okna dla tabeli
                 TabelaAbcWindow tabelaC = new TabelaAbcWindow(tab) { Title = "Tabela C " + dzien };
@@ -275,6 +371,13 @@ namespace KursyWalutNBP
             }
         }
 
+        /// <summary>
+        /// Zdarzenie wywoływane po wybraniu opcji "Edycja->Wyczyść listę".
+        /// Czyści listę wybranych walut. W zależności od tego jaki tryb
+        /// został ostatnio wybrany, taka lista zostanie wyczyszczona.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Wyczysc_Click(object sender, RoutedEventArgs e)
         {
             // Jeśli użytkownik pracuje w trybie aktualnych kursów,
@@ -289,7 +392,7 @@ namespace KursyWalutNBP
                 listaWalutArch.Items.Clear();
         }
 
-        private void WykresLista_Click(object sender, RoutedEventArgs e)
+        /*private void WykresLista_Click(object sender, RoutedEventArgs e)
         {
 
         }
@@ -312,30 +415,55 @@ namespace KursyWalutNBP
         private void WykresZmian_Click(object sender, RoutedEventArgs e)
         {
 
-        }
+        }*/
 
-        private void Pomoc_Click(object sender, RoutedEventArgs e)
+        /*private void Pomoc_Click(object sender, RoutedEventArgs e)
         {
 
-        }
+        }*/
 
+        /// <summary>
+        /// Zdarzenie wywoływane po wybraniu opcji "Pomoc->O programie".
+        /// Wyświetla małe okno z krótkim opisem programu.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OProgramie_Click(object sender, RoutedEventArgs e)
         {
             OProgramieWindow oProgramieWindow = new OProgramieWindow();
             oProgramieWindow.Show();
         }
 
+        /// <summary>
+        /// Zdarzenie wywoływane po wybraniu opcji "Pomoc->Strona NBP".
+        /// Otwiera w domyślnej przeglądarce oficjalną stronę NBP.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void StronaNBP_Click(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Process.Start("http://www.nbp.pl/");
         }
 
+        /// <summary>
+        /// Zdarzenie jest wywoływane po wybraniu opcji "Pomoc->Autorzy".
+        /// Wyświetla małe okno z informacją o autorach projektu.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Autorzy_Click(object sender, RoutedEventArgs e)
         {
             AutorzyWindow autorzyWindow = new AutorzyWindow();
             autorzyWindow.Show();
         }
 
+        /// <summary>
+        /// Zdarzenie wywoływane po wybraniu roku w ComboBox, w trybie "Archiwum".
+        /// Pobiera odpowiedni plik "dir[rok].txt" ze strony NBP
+        /// oraz wypełnia ComboBox z wyborem miesiąca.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void wyborRokuArch_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             try
@@ -382,6 +510,12 @@ namespace KursyWalutNBP
             }
         }
 
+        /// <summary>
+        /// Zdarzenie wywoływane po wybraniu miesiąca w ComboBox, w trybie "Archiwum"
+        /// Wypełnia ComboBox do wyboru dnia.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void wyborMiesiacaArch_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             _listPlikowZMiesiaca.Clear();
@@ -423,6 +557,13 @@ namespace KursyWalutNBP
             }
         }
 
+        /// <summary>
+        /// Zdarzenie wywoływane po wybraniu dnia w ComboBox, w trybie "Archiwum"
+        /// Pobiera tabele z kursami walut, zależnie od wybranego dnia.
+        /// Wypełnia ComboBox z wyborem tabeli.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void wyborDniaArch_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             _tabeleArch.Clear();
@@ -437,11 +578,11 @@ namespace KursyWalutNBP
                     if (Convert.ToInt32(wyborDniaArch.SelectedItem) == dzien)
                     {
                         if (t[0] == 'a')
-                        _tabeleArch.Add(new WalutyXML("http://www.nbp.pl/kursy/xml/" + t + ".xml", "Tabela A", true));
+                        _tabeleArch.Add(new WalutyXml("http://www.nbp.pl/kursy/xml/" + t + ".xml", "Tabela A", true));
                         else if (t[0] == 'b')
-                        _tabeleArch.Add(new WalutyXML("http://www.nbp.pl/kursy/xml/" + t + ".xml", "Tabela B", true));
+                        _tabeleArch.Add(new WalutyXml("http://www.nbp.pl/kursy/xml/" + t + ".xml", "Tabela B", true));
                         else if (t[0] == 'c')
-                        _tabeleArch.Add(new WalutyXML("http://www.nbp.pl/kursy/xml/" + t + ".xml", "Tabela C", false));
+                        _tabeleArch.Add(new WalutyXml("http://www.nbp.pl/kursy/xml/" + t + ".xml", "Tabela C", false));
                         }
                     else if (Convert.ToInt32(wyborDniaArch.SelectedItem) < dzien)
                         break;
@@ -450,7 +591,7 @@ namespace KursyWalutNBP
                 _tabeleArch.Sort((x,y) => String.CompareOrdinal(x.Nazwa, y.Nazwa));
 
                 // Wypełnianie combobox'a 'wyborTabeliArch'
-                foreach (WalutyXML tabela in _tabeleArch)
+                foreach (WalutyXml tabela in _tabeleArch)
                 {
                     wyborTabeliArch.Items.Add(tabela.Nazwa);
                 }
@@ -462,6 +603,12 @@ namespace KursyWalutNBP
             
         }
 
+        /// <summary>
+        /// Zdarzenie wywoływane po wybraniu tabeli w ComboBox, w trybie "Archiwum".
+        /// Wypełnia ComboBox do wyboru waluty, zależnie od wybranej tabeli.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void wyborTabeliArch_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             try
@@ -486,6 +633,12 @@ namespace KursyWalutNBP
             }
         }
 
+        /// <summary>
+        /// Zdarzenie wywoływane po wybraniu waluty w ComboBox, w trybie "Archiwum".
+        /// Dodaje do listy wybranych walut archiwalnych wybraną walutę.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void wyborWalutyArch_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // ustawianie stringu 'miesiac' w zależności od wybranego miesiąca
@@ -520,6 +673,13 @@ namespace KursyWalutNBP
             }
         }
 
+        /// <summary>
+        /// Zdarzenie wywoływane po naciśnięciu przycisku z napisem "Wybierz folder..." w trybie "Zapisz".
+        /// Otwiera okno, które pozwala wybrać folder, w którym to użytkownik
+        /// może zapisać swoje listy wybranych walut.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void zapiszWybierzFolder_Click(object sender, RoutedEventArgs e)
         {
             // tworzenie okienka, w którym użytkownik może wybrać folder,
@@ -530,6 +690,17 @@ namespace KursyWalutNBP
                 zapiszSciezka.Text = folderDialog.SelectedPath;
         }
 
+        /// <summary>
+        /// Zdarzenie wywoływane po naciśnięciu przycisku z napisem "ZAPISZ",
+        /// w trybie "Zapisz...".
+        /// Zapisuje wybrane listy do plików w wybranym folderze,
+        /// w wybranym przez użytkownika formacie oraz nazwie pliku.
+        /// Jeśli jest to lista - archiwum, to do nazwy pliku
+        /// dopisywany jest ciąg "Arch".
+        /// Dostępne formaty zapisu, to .csv oraz .xml.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void zapiszButton_Click(object sender, RoutedEventArgs e)
         {
             // jeśli nie wybrano żadnej z list do zapisu,

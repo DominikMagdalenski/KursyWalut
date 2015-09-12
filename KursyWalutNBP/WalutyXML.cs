@@ -7,12 +7,15 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Xml;
 
 namespace KursyWalutNBP
 {
-    public class WalutyXML
+    /// <summary>
+    /// Klasa przedstawiająca zbiór walut.
+    /// Za jej pomocą można wyciągnąć z pliku XML dane o kursach walut.
+    /// </summary>
+    public class WalutyXml
     {
         public string Nazwa { get; set; }           // nazwa tabeli
         public Boolean KursSredni { get; set; }     // czy uwzgledniany jest tylko kurs średni?
@@ -27,7 +30,14 @@ namespace KursyWalutNBP
         // 2. arg - nazwa - nazwa tabeli
         // 3. arg - kursSredni - czy w tabeli jest uwzgledniany tylko kurs sredni - true?
         // czy kurs kupna/sprzedaży - false?
-        public WalutyXML(string filename, string nazwa, Boolean kursSredni)
+        /// <summary>
+        /// Konstruktor z trzema parametrami, odpowiedzialny za pobranie
+        /// i przetworzenie dokumentu XML z kursami walut.
+        /// </summary>
+        /// <param name="filename">Nazwa pliku (URL).</param>
+        /// <param name="nazwa">Nazwa zbioru walut lub tabeli, np. "Tabela A".</param>
+        /// <param name="kursSredni">Czy w tym zbiorze/tabeli mają być uwzględnione kursy średni?</param>
+        public WalutyXml(string filename, string nazwa, Boolean kursSredni)
         {
             Nazwa = nazwa;
             KursSredni = kursSredni;
