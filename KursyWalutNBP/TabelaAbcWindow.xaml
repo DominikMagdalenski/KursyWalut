@@ -1,0 +1,17 @@
+﻿<Window x:Name="TabelaAbcWindowXaml" x:Class="KursyWalutNBP.TabelaAbcWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Tabela A" Height="501" Width="459" ResizeMode="NoResize" Icon="green_dollar.ico" WindowStartupLocation="Manual">
+    <Grid>
+        <ListView x:Name="TabelaListView">
+            <ListView.View>
+                <GridView x:Name="TabelaGridView">
+                    <GridViewColumn x:Name="WalutaCol" Header="Waluta" Width="260" DisplayMemberBinding="{Binding Nazwa}"></GridViewColumn>
+                    <GridViewColumn x:Name="PrzelicznikCol" Header="Przelicznik" Width="55" DisplayMemberBinding="{Binding Przelicznik}"></GridViewColumn>
+                    <GridViewColumn x:Name="KodCol" Header="Kod" Width="40" DisplayMemberBinding="{Binding Kod}"></GridViewColumn>
+                    <GridViewColumn x:Name="SredniCol" Header="Średni" Width="55" DisplayMemberBinding="{Binding KursSredni}"></GridViewColumn>
+                    </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</Window>
