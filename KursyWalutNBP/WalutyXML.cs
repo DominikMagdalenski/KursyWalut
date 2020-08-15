@@ -1,10 +1,3 @@
-﻿/************************************************************************
- * WalutyXML.cs -- klasa zapisująca dane z dokumentów XML               *
- * do zdefiniowanej listy walut                                         *
- * Autor: Dominik Magdaleński                                           *
- * Data: 25/07/2015                                                     *
- ***********************************************************************/
-
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -20,17 +13,12 @@ namespace KursyWalutNBP
     {
         public string Nazwa { get; set; }           // nazwa tabeli
         public Boolean KursSredni { get; set; }     // czy uwzgledniany jest tylko kurs średni?
-        private readonly int _count;                // ilość walut w tabeli
-        public int Count { get { return _count;} }  // ilość walut w tabeli
+        private readonly int _count;                // liczba walut w tabeli
+        public int Count { get { return _count;} }  // liczba walut w tabeli
 
         private readonly List<Waluta> _lista;                   // lista walut
         public List<Waluta> Lista { get { return _lista; } }    // lista walut
 
-        // konstruktor
-        // 1. arg - filename - adres URL dokumentu XML
-        // 2. arg - nazwa - nazwa tabeli
-        // 3. arg - kursSredni - czy w tabeli jest uwzgledniany tylko kurs sredni - true?
-        // czy kurs kupna/sprzedaży - false?
         /// <summary>
         /// Konstruktor z trzema parametrami, odpowiedzialny za pobranie
         /// i przetworzenie dokumentu XML z kursami walut.
@@ -43,19 +31,17 @@ namespace KursyWalutNBP
             Nazwa = nazwa;
             KursSredni = kursSredni;
 
-            // tworzenie nowego dokumentu XML
             var doc = new XmlDocument();
 
-            // tworzenie nowej listy walut
             _lista = new List<Waluta>();
 
             // pobieranie dokumentu z adresu URL - filename
             doc.Load(filename);
 
-            // obliczanie ilości walut
+            // obliczanie liczby walut
             _count = doc.GetElementsByTagName("pozycja").Count;
 
-            // Petla dodaje waluty do listy zapamiętując w odpowiednich właściwościach
+            // Petla dodaje waluty do listy zapisując w odpowiednich właściwościach
             // nazwę waluty, przelicznik, kod
             // oraz kurs średni/kupna/sprzedaży (zależy od arg. kursSredni)
             for (int i = 0; i < _count; i++)
@@ -97,9 +83,7 @@ namespace KursyWalutNBP
             }
         }
 
-        // Przeciążenie metody ToString z argumentem typu int
-        // 1. arg - index - indeks wybranej waluty w comboBox'ie
-        public string ToString(int index)
+        public string ToString(int index)  // index - indeks wybranej waluty w comboBox'ie
         {
             string kurs;
 
