@@ -1,28 +1,19 @@
-﻿/************************************************************************
- * Waluta.cs -- klasa reprezentująca walutę                             *
- * Autor: Dominik Magdaleński                                           *
- * Data: 25/07/2015                                                     *
- ***********************************************************************/
-
 namespace KursyWalutNBP
 {
-    /// <summary>
-    /// Klasa reprezentująca walutę.
-    /// </summary>
     public class Waluta
     {
-        public string Nazwa { get; set; }           // nazwa waluty
-        public int Przelicznik { get; set; }     // przelicznik
-        public string Kod { get; set; }             // kod, np. PLN, USD, itp. itd.
-        public double KursSredni { get; set; }      // kurs średni
-        public double KursKupna { get; set; }       // kurs kupna
-        public double KursSprzedazy { get; set; }   // kurs sprzedaży
+        public string Nazwa { get; set; }
+        public int Przelicznik { get; set; }
+        public string Kod { get; set; }             // np. PLN, USD, itp. itd.
+        public double KursSredni { get; set; }
+        public double KursKupna { get; set; }
+        public double KursSprzedazy { get; set; }
         /// <summary>
-        /// Z którego dnia pochodzą dane o tej walucie.
+        /// Z którego dnia pochodzą dane o walucie.
         /// </summary>
-        public string Dzien { get; set; }           // z ktorego dnia kurs waluty?
+        public string Dzien { get; set; }
 
-        // właściwość potrzebna z powodu różnicy we wzorcach dokumentów XML
+        // Właściwość potrzebna z powodu różnicy we wzorcach dokumentów XML
         // do maja 2004 roku dla tabel A i C
         // oraz do kwietnia 2012 roku dla tabeli B
         /// <summary>
@@ -30,17 +21,8 @@ namespace KursyWalutNBP
         /// </summary>
         public string Kraj { get; set; }
 
-        // konstruktor domyślny
         public Waluta() { }
 
-        // konstruktor z czterema argumentami
-        // 1. arg - nazwa - nazwa waluty
-        // 2. arg - przelicznik - przelicznik waluty
-        // 3. arg - kod - kod waluty, np. PLN, EUR, itp. itd.
-        // 4. arg - kurs - kurs średni waluty
-        /// <summary>
-        /// Konstruktor ustawiający 4 właściwości.
-        /// </summary>
         /// <param name="nazwa">Nazwa waluty, np. "euro".</param>
         /// <param name="przelicznik">Przelicznik waluty, np. 1.</param>
         /// <param name="kod">Kod waluty, np. PLN, EUR, USD.</param>
@@ -54,15 +36,6 @@ namespace KursyWalutNBP
             KursSredni = kurs;
         }
 
-        // konstruktor z pięcioma argumentami
-        // 1. arg - nazwa - nazwa waluty
-        // 2. arg - przelicznik - przelicznik waluty
-        // 3. arg - kod - kod waluty, np. PLN, EUR, itp. itd.
-        // 4. arg - kursKupna - kurs kupna waluty
-        // 5. arg - kursSprzedazy - kurs sprzedaży waluty
-        /// <summary>
-        /// Konstruktor ustawiający 5 właściwości.
-        /// </summary>
         /// <param name="nazwa">Nazwa waluty, np. "funt szterling".</param>
         /// <param name="przelicznik">Przelicznik waluty, np. 1.</param>
         /// <param name="kod">Kod waluty, np. "GBP"</param>
